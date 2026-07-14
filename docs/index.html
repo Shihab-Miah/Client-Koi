@@ -1,299 +1,702 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Geo Bucket — B2B Lead Extraction from Google Maps</title>
+  <meta name="description" content="Extract verified emails, phone numbers, and websites from Google Maps at scale. Built for sales teams, agencies, and recruiters who need fresh leads fast."/>
+  <link rel="icon" type="image/png" href="../icons/32x32.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Geo Bucket - Lead Generation Reimagined</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-surface": "#e2e2e2",
-                    "on-primary": "#003914",
-                    "on-secondary-container": "#b7b4b7",
-                    "tertiary-container": "#a2a0a4",
-                    "tertiary": "#c8c6c9",
-                    "on-primary-container": "#004118",
-                    "on-secondary": "#313032",
-                    "inverse-primary": "#006e2d",
-                    "on-error": "#690005",
-                    "primary": "#1DB954",
-                    "on-tertiary-fixed": "#1b1b1e",
-                    "on-tertiary-fixed-variant": "#47464a",
-                    "surface-container": "#1e2020",
-                    "primary-container": "#1db954",
-                    "on-secondary-fixed-variant": "#474649",
-                    "surface-container-high": "#282a2b",
-                    "surface": "#121414",
-                    "surface-tint": "#1DB954",
-                    "primary-fixed": "#72fe8f",
-                    "on-error-container": "#ffdad6",
-                    "surface-container-lowest": "#09090b",
-                    "surface-container-highest": "#333535",
-                    "outline-variant": "#3d4a3d",
-                    "surface-container-low": "#1a1c1c",
-                    "secondary-container": "#474649",
-                    "primary-fixed-dim": "#1DB954",
-                    "on-secondary-fixed": "#1c1b1d",
-                    "tertiary-fixed-dim": "#c8c6c9",
-                    "surface-dim": "#121414",
-                    "on-surface-variant": "#bccbb9",
-                    "background": "#09090b",
-                    "tertiary-fixed": "#e4e1e5",
-                    "on-primary-fixed-variant": "#005320",
-                    "secondary": "#c8c6c8",
-                    "on-primary-fixed": "#002108",
-                    "surface-variant": "#333535",
-                    "on-tertiary": "#303033",
-                    "on-background": "#e2e2e2",
-                    "inverse-surface": "#e2e2e2",
-                    "outline": "#869585",
-                    "secondary-fixed-dim": "#c8c6c8",
-                    "on-tertiary-container": "#37373a",
-                    "error-container": "#93000a",
-                    "error": "#ffb4ab",
-                    "secondary-fixed": "#e5e1e4",
-                    "inverse-on-surface": "#2f3131",
-                    "surface-bright": "#38393a"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "12px",
-                    "xl": "24px",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "margin-mobile": "20px",
-                    "stack-md": "24px",
-                    "gutter-mobile": "12px",
-                    "stack-lg": "48px",
-                    "stack-sm": "8px",
-                    "unit": "4px",
-                    "container-padding": "24px"
-            },
-            "fontFamily": {
-                    "display-lg": ["Geist", "sans-serif"],
-                    "body-md": ["Geist", "sans-serif"],
-                    "headline-lg-mobile": ["Geist", "sans-serif"],
-                    "headline-md": ["Geist", "sans-serif"],
-                    "body-lg": ["Geist", "sans-serif"],
-                    "label-sm": ["Geist", "sans-serif"],
-                    "headline-lg": ["Geist", "sans-serif"],
-                    "label-md": ["Geist", "sans-serif"]
-            },
-            "fontSize": {
-                    "display-lg": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
-                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
-                    "headline-lg-mobile": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
-                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .radar-glow {
-            box-shadow: 0 0 20px rgba(29, 185, 84, 0.15);
-        }
-        .active-ring {
-            box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.4);
-        }
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
-        }
-        .animate-pulse-slow {
-            animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
+    :root {
+      --bg: #0a0a0b;
+      --surface-1: #111113;
+      --surface-2: #18181b;
+      --surface-3: #1e1e22;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0a8;
+      --text-muted: #6b6b75;
+      --accent: #1DB954;
+      --accent-dim: rgba(29,185,84,0.15);
+      --accent-glow: rgba(29,185,84,0.3);
+      --red: #ef4444;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--accent); color: #000; }
+
+    /* ─── Layout ──────────────────────── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    @media (min-width: 768px) { .container { padding: 0 48px; } }
+
+    /* ─── Navigation ─────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,11,0.7);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--text-primary);
+    }
+    .nav-brand img { width: 28px; height: 28px; border-radius: 6px; }
+    .nav-brand span { font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-version {
+      font-family: var(--mono); font-size: 11px; color: var(--text-muted);
+      background: var(--surface-2); padding: 4px 10px; border-radius: 99px;
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* ─── Hero ────────────────────────── */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse at center, var(--accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+      animation: hero-pulse 6s ease-in-out infinite;
+    }
+    @keyframes hero-pulse {
+      0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      padding: 6px 16px; border-radius: 99px;
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: dot-pulse 2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero .subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .hero-cta {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* ─── Buttons ─────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--radius);
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      transition: all 0.2s ease; cursor: pointer; border: none;
+      font-family: var(--font);
+    }
+    .btn-primary {
+      background: var(--accent); color: #000;
+      box-shadow: 0 0 20px var(--accent-dim);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: var(--surface-2); color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-3);
+    }
+    .btn .material-symbols-outlined { font-size: 18px; }
+
+    /* ─── Logo Showcase ──────────────── */
+    .hero-product {
+      margin-top: 72px;
+      position: relative;
+    }
+    .hero-product-frame {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-product-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-product-bar .dot-row { display: flex; gap: 6px; }
+    .hero-product-bar .dot-row span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .hero-product-bar .dot-row span:nth-child(1) { background: #ef4444; }
+    .hero-product-bar .dot-row span:nth-child(2) { background: #f59e0b; }
+    .hero-product-bar .dot-row span:nth-child(3) { background: #22c55e; }
+    .hero-product-bar .tab-label {
+      font-size: 12px; color: var(--text-muted); margin-left: 8px;
+      font-family: var(--mono);
+    }
+    .hero-product-content {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      min-height: 300px;
+    }
+    @media (max-width: 768px) {
+      .hero-product-content { grid-template-columns: 1fr; padding: 20px; }
+    }
+    .lead-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .lead-card:hover { border-color: var(--accent-dim); }
+    .lead-card-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .lead-avatar {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700;
+    }
+    .lead-name { font-size: 14px; font-weight: 600; }
+    .lead-category { font-size: 11px; color: var(--text-muted); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+    .lead-detail {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .lead-detail .material-symbols-outlined { font-size: 15px; color: var(--accent); }
+    .lead-rating { display: flex; align-items: center; gap: 4px; margin-top: 10px; }
+    .lead-rating .star { color: #f59e0b; font-size: 13px; }
+    .lead-rating span { font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
+
+    /* ─── Section Headings ────────────── */
+    .section { padding: 100px 0; }
+    .section-label {
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 17px; color: var(--text-secondary); max-width: 560px;
+      line-height: 1.6;
+    }
+    .section-header { margin-bottom: 56px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-desc { margin: 0 auto; }
+
+    /* ─── Features Grid ──────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feature-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--accent-dim);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon .material-symbols-outlined { font-size: 22px; color: var(--accent); }
+    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ─── How It Works ────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      counter-reset: step;
+    }
+    @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } }
+    .step-card {
+      position: relative;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      counter-increment: step;
+    }
+    .step-card::before {
+      content: counter(step, decimal-leading-zero);
+      font-family: var(--mono);
+      font-size: 48px; font-weight: 700;
+      color: var(--surface-3);
+      position: absolute; top: 20px; right: 24px;
+      line-height: 1;
+    }
+    .step-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .step-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+    .step-card code {
+      display: inline-block; margin-top: 8px;
+      font-family: var(--mono); font-size: 12px;
+      background: var(--surface-2); color: var(--accent);
+      padding: 4px 10px; border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── Stats Banner ────────────────── */
+    .stats-banner {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    @media (max-width: 768px) { .stats-banner { grid-template-columns: 1fr 1fr; padding: 32px; } }
+    .stat-item .stat-value {
+      font-size: 36px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--accent);
+    }
+    .stat-item .stat-label {
+      font-size: 13px; color: var(--text-muted); margin-top: 4px;
+    }
+
+    /* ─── Tech Stack ─────────────────── */
+    .tech-grid {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    }
+    .tech-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      padding: 8px 16px; border-radius: 99px;
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      font-family: var(--mono);
+      transition: border-color 0.2s;
+    }
+    .tech-chip:hover { border-color: var(--border-hover); }
+
+    /* ─── CTA Section ────────────────── */
+    .cta-section {
+      text-align: center;
+      padding: 100px 0 120px;
+    }
+    .cta-section .cta-box {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 64px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse at center, var(--accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .cta-section p {
+      font-size: 17px; color: var(--text-secondary);
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    /* ─── Footer ──────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--text-muted);
+    }
+    .footer-brand img { width: 20px; height: 20px; border-radius: 4px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 13px; color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ─── Animations ──────────────────── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── Scrollbar ───────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
   </style>
 </head>
-<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-black antialiased">
-<header class="fixed top-0 w-full z-50 bg-white/5 backdrop-blur-md border-b border-white/10 shadow-sm">
-<div class="flex items-center justify-between px-margin-mobile py-4 w-full">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-headline-md" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
-<span class="text-headline-md font-headline-lg-mobile text-primary tracking-tighter">Geo Bucket</span>
-</div>
-<button class="material-symbols-outlined hover:opacity-80 transition-opacity active:scale-95 text-on-surface">menu</button>
-</div>
-</header>
-<main class="pt-24 pb-stack-lg">
-<section class="px-margin-mobile flex flex-col items-center text-center gap-stack-md mb-stack-lg relative overflow-hidden">
-<div class="absolute inset-0 -z-10 flex items-center justify-center opacity-20">
-<div class="w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse-slow"></div>
-</div>
-<div class="space-y-4 max-w-sm">
-<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight">
-                    Stop scrolling.<br/><span class="text-primary">Start closing.</span>
-</h1>
-<p class="font-body-md text-body-md text-on-surface-variant px-2">
-                    Automated B2B lead generation from Google Maps directly to your browser.
-                </p>
-</div>
-<div class="w-full flex flex-col gap-4">
-<a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="w-full flex justify-center py-4 bg-primary text-black font-label-md text-label-md rounded-xl active:scale-95 transition-transform font-bold radar-glow">
-                    Add to Chrome (Free)
-                </a>
-<button class="w-full py-4 glass-card text-on-surface font-label-md text-label-md rounded-xl active:scale-95 transition-transform">
-                    View Documentation
-                </button>
-</div>
-<div class="mt-8 w-full glass-card rounded-xl aspect-[4/3] overflow-hidden relative border border-white/10">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
-<div class="absolute inset-0 flex items-center justify-center">
-<div class="relative w-full h-full">
+<body>
 
-<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-<span class="material-symbols-outlined text-primary text-[64px] animate-pulse" style="font-variation-settings: 'FILL' 1;">location_on</span>
-</div>
-</div>
-</div>
-<div class="absolute bottom-4 left-4 right-4 glass-card p-container-padding rounded-lg flex items-center justify-between border border-white/10">
-<div class="flex items-center gap-3">
-<div class="w-2 h-2 bg-primary rounded-full animate-ping"></div>
-<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Live Scanning...</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">142 Leads Found</span>
-</div>
-</div>
+<!-- ─── Navigation ──────────────────── -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="nav-brand">
+      <img src="../icons/48x48.png" alt="Geo Bucket"/>
+      <span>Geo Bucket</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#stack">Stack</a>
+      <span class="nav-version">v7.1.2</span>
+      <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn btn-primary" style="padding: 8px 20px; font-size: 13px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">download</span>
+        Download
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Hero ────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Manifest V3 &middot; Chrome, Edge, Brave
+    </div>
+    <h1>
+      Stop scrolling through Maps.<br/>
+      <span class="accent">Start extracting leads.</span>
+    </h1>
+    <p class="subtitle">
+      Scrape verified business emails, phone numbers, websites, ratings, and 
+      social profiles directly from Google Maps. Export to CSV or XLSX in one click.
+    </p>
+    <div class="hero-cta">
+      <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn btn-primary">
+        <span class="material-symbols-outlined">download</span>
+        Download Extension
+      </a>
+      <a href="#install" class="btn btn-secondary">
+        How to Install
+      </a>
+    </div>
+
+    <!-- Product Preview -->
+    <div class="hero-product fade-in">
+      <div class="hero-product-frame">
+        <div class="hero-product-bar">
+          <div class="dot-row"><span></span><span></span><span></span></div>
+          <span class="tab-label">google.com/maps — Geo Bucket Active</span>
+        </div>
+        <div class="hero-product-content">
+          <!-- Simulated lead cards -->
+          <div class="lead-card">
+            <div class="lead-card-header">
+              <div class="lead-avatar" style="background: #1e3a5f; color: #60a5fa;">A</div>
+              <div>
+                <div class="lead-name">Alpine Digital Agency</div>
+                <div class="lead-category">Marketing Agency</div>
+              </div>
+            </div>
+            <div class="lead-detail"><span class="material-symbols-outlined">mail</span> contact@alpine.io</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">call</span> +1 (555) 234-8901</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">language</span> alpinedigital.io</div>
+            <div class="lead-rating">
+              <span class="star">★★★★★</span>
+              <span>4.8 (312 reviews)</span>
+            </div>
+          </div>
+          <div class="lead-card">
+            <div class="lead-card-header">
+              <div class="lead-avatar" style="background: #3b1a45; color: #c084fc;">N</div>
+              <div>
+                <div class="lead-name">Nexus Consulting</div>
+                <div class="lead-category">Business Consulting</div>
+              </div>
+            </div>
+            <div class="lead-detail"><span class="material-symbols-outlined">mail</span> info@nexus-group.com</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">call</span> +44 20 7946 0958</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">language</span> nexusconsulting.co.uk</div>
+            <div class="lead-rating">
+              <span class="star">★★★★</span>
+              <span>4.5 (189 reviews)</span>
+            </div>
+          </div>
+          <div class="lead-card">
+            <div class="lead-card-header">
+              <div class="lead-avatar" style="background: #1a3a2a; color: #4ade80;">S</div>
+              <div>
+                <div class="lead-name">Summit Health Clinic</div>
+                <div class="lead-category">Healthcare</div>
+              </div>
+            </div>
+            <div class="lead-detail"><span class="material-symbols-outlined">mail</span> admin@summithealth.com</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">call</span> +1 (555) 789-4561</div>
+            <div class="lead-detail"><span class="material-symbols-outlined">language</span> summithealth.com</div>
+            <div class="lead-rating">
+              <span class="star">★★★★★</span>
+              <span>4.9 (547 reviews)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<section class="px-margin-mobile mb-stack-lg">
-<div class="mb-stack-md">
-<h2 class="font-headline-md text-headline-md text-on-surface text-center">How to Install</h2>
-</div>
-<div class="grid gap-4">
-<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
-<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">download_for_offline</span>
-</div>
-<div>
-<span class="block font-label-md text-label-md text-on-surface">Step 1</span>
-<p class="font-body-md text-body-md text-on-surface-variant">Download ZIP</p>
-</div>
-</div>
-<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
-<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">folder_zip</span>
-</div>
-<div>
-<span class="block font-label-md text-label-md text-on-surface">Step 2</span>
-<p class="font-body-md text-body-md text-on-surface-variant">Unzip the archive</p>
-</div>
-</div>
-<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
-<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">extension</span>
-</div>
-<div>
-<span class="block font-label-md text-label-md text-on-surface">Step 3</span>
-<p class="font-body-md text-body-md text-on-surface-variant text-sm">Load Unpacked in chrome://extensions</p>
-</div>
-</div>
-</div>
+
+<!-- ─── Stats ───────────────────────── -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="stats-banner fade-in">
+      <div class="stat-item">
+        <div class="stat-value">24+</div>
+        <div class="stat-label">Data Points Per Lead</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">CSV</div>
+        <div class="stat-label">& XLSX Export</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">External Servers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">MV3</div>
+        <div class="stat-label">Manifest V3</div>
+      </div>
+    </div>
+  </div>
 </section>
-<section class="px-margin-mobile mb-stack-lg">
-<div class="mb-stack-md">
-<h2 class="font-headline-md text-headline-md text-on-surface text-center">Core Features</h2>
-</div>
-<div class="grid gap-4">
-<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
-<div class="mb-4">
-<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-on-surface mb-2">2Captcha Integration</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Solve complex captchas automatically without manual intervention. Scale your searches effortlessly.</p>
-</div>
-<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
-<div class="mb-4">
-<span class="material-symbols-outlined text-primary text-3xl">troubleshoot</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Deep Web Crawling</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Extract hidden contact details, social profiles, and email addresses directly from business websites.</p>
-</div>
-<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
-<div class="mb-4">
-<span class="material-symbols-outlined text-primary text-3xl">security</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Anti-Ban Mechanics</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Smart rate-limiting and human-behavior simulation to keep your Google accounts safe and active.</p>
-</div>
-</div>
+
+<!-- ─── Features ─────────────────────── -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">Everything you need to build<br/>a pipeline from Maps data</h2>
+      <p class="section-desc">
+        Geo Bucket intercepts, normalizes, and enriches Google Maps data in real time.
+        No API keys. No rate limit errors. No server dependencies.
+      </p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">smart_toy</span></div>
+        <h3>2Captcha Bypass</h3>
+        <p>Automatically solves Google reCAPTCHA challenges during long scraping sessions. No manual intervention required.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">hub</span></div>
+        <h3>Interceptor Pipeline</h3>
+        <p>Patches chrome.storage and JSON.parse at runtime to capture, normalize, and deduplicate lead data before it hits the UI.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">travel_explore</span></div>
+        <h3>Deep Crawl Engine</h3>
+        <p>Extracts hidden emails, social profiles, and phone numbers directly from business websites linked on Google Maps.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">shield</span></div>
+        <h3>Anti-Ban Mechanics</h3>
+        <p>Human-behavior simulation with randomized delays, scroll patterns, and request throttling to protect your Google account.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">file_download</span></div>
+        <h3>One-Click Export</h3>
+        <p>Download your entire lead database as clean CSV or XLSX with column headers, ready for your CRM or cold email tool.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon"><span class="material-symbols-outlined">dock_to_right</span></div>
+        <h3>Side Panel UI</h3>
+        <p>Runs in Chrome's native side panel. Browse Maps normally while Geo Bucket collects data alongside your tab.</p>
+      </div>
+    </div>
+  </div>
 </section>
-<section class="px-margin-mobile">
-<div class="glass-card rounded-xl p-container-padding overflow-hidden relative">
-<div class="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
-<div class="relative z-10">
-<h2 class="font-headline-md text-headline-md mb-stack-sm">Ready to extract?</h2>
-<p class="font-body-md text-body-md text-on-surface-variant mb-stack-md">Join 5,000+ businesses using Geo Bucket to fuel their outreach pipeline.</p>
-<a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="w-full flex justify-center py-4 bg-primary text-black font-label-md text-label-md rounded-xl font-bold radar-glow active:scale-95 transition-transform">
-                        Get Started For Free
-                    </a>
-</div>
-</div>
+
+<!-- ─── How to Install ───────────────── -->
+<section class="section" id="install" style="background: var(--surface-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Get Started</div>
+      <h2 class="section-title">Install in under 60 seconds</h2>
+      <p class="section-desc">
+        Three steps. No developer account needed. Works on Chrome, Edge, Brave, and any Chromium-based browser.
+      </p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card fade-in">
+        <h3>Download the ZIP</h3>
+        <p>Click the download button above. It always delivers the latest version from this repository.</p>
+        <code>Geo-Bucket-main.zip</code>
+      </div>
+      <div class="step-card fade-in">
+        <h3>Unzip the archive</h3>
+        <p>Extract the folder to a permanent location on your machine. Don't delete it after loading.</p>
+        <code>Right-click → Extract All</code>
+      </div>
+      <div class="step-card fade-in">
+        <h3>Load into your browser</h3>
+        <p>Open Extensions, enable Developer Mode, click "Load unpacked", and select the extracted folder.</p>
+        <code>chrome://extensions</code>
+      </div>
+    </div>
+  </div>
 </section>
-</main>
-<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-white/5 w-full py-stack-lg">
-<div class="flex flex-col items-center gap-stack-md px-margin-mobile text-center">
-<div class="flex items-center gap-2 mb-4">
-<span class="material-symbols-outlined text-primary/60 text-headline-md" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
-<span class="text-label-md font-label-md text-on-surface-variant">Geo Bucket</span>
-</div>
-<div class="flex flex-wrap justify-center gap-6 mb-8">
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a>
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Pricing</a>
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Documentation</a>
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
-</div>
-<p class="font-body-md text-body-md text-on-surface-variant/60">
-                © 2024 Geo Bucket. All rights reserved.
-            </p>
-</div>
+
+<!-- ─── Tech Stack ───────────────────── -->
+<section class="section" id="stack">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Under the Hood</div>
+      <h2 class="section-title">Built with production-grade tooling</h2>
+      <p class="section-desc">
+        Not a weekend script. Geo Bucket is a full-stack system with a React UI, a serverless backend, and runtime data interception.
+      </p>
+    </div>
+    <div class="tech-grid fade-in">
+      <span class="tech-chip">React 18</span>
+      <span class="tech-chip">Vite</span>
+      <span class="tech-chip">Manifest V3</span>
+      <span class="tech-chip">Google Apps Script</span>
+      <span class="tech-chip">HMAC-SHA256</span>
+      <span class="tech-chip">2Captcha API</span>
+      <span class="tech-chip">Lottie Animations</span>
+      <span class="tech-chip">WebGL Shaders</span>
+      <span class="tech-chip">OAuth 2.0</span>
+      <span class="tech-chip">XOR Obfuscation</span>
+      <span class="tech-chip">NowPayments IPN</span>
+      <span class="tech-chip">bKash Integration</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ──────────────────────────── -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box fade-in">
+      <h2>Ready to extract your next 1,000 leads?</h2>
+      <p>Download Geo Bucket and start building your pipeline in minutes.</p>
+      <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn btn-primary" style="position:relative;">
+        <span class="material-symbols-outlined">download</span>
+        Download Geo Bucket
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ──────────────────────── -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="../icons/32x32.png" alt="Geo Bucket"/>
+      <span>&copy; 2025 Geo Bucket</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/Shihab-Miah/Geo-Bucket">GitHub</a>
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+    </div>
+  </div>
 </footer>
-<script>
-        // Micro-interaction for scroll effects
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 20) {
-                header.classList.add('bg-black/60');
-                header.classList.remove('bg-white/5');
-            } else {
-                header.classList.remove('bg-black/60');
-                header.classList.add('bg-white/5');
-            }
-        });
 
-        // Hover effect for glass cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-            });
-        });
-    </script>
-</body></html>
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 40) {
+      nav.style.background = 'rgba(10,10,11,0.92)';
+    } else {
+      nav.style.background = 'rgba(10,10,11,0.7)';
+    }
+  });
+</script>
+</body>
+</html>
