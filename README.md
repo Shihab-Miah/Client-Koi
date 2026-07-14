@@ -4,10 +4,11 @@
 
 # Geo Bucket
 
-Lead scraper for Google Maps. Pulls emails, phones, websites, and social links from business listings and exports them as CSV or XLSX.
+A high-performance lead extraction engine for Google Maps. Built on React and Manifest V3, with a serverless backend, automated captcha bypassing, and a heavy focus on clean data output.
 
 [![Version](https://img.shields.io/badge/v7.1.2-stable-1DB954?style=flat-square&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
-[![Chrome](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
+[![Chrome](https://img.shields.io/badge/Manifest-V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
 [![License](https://img.shields.io/badge/License-Proprietary-E5E2E1?style=flat-square&labelColor=0A0A0A)](#license)
 
 <br />
@@ -20,102 +21,83 @@ Lead scraper for Google Maps. Pulls emails, phones, websites, and social links f
 
 ## What is this?
 
-Geo Bucket is a Chrome extension that scrapes Google Maps search results. You search for something like "dentists in Dallas" or "restaurants near me," open the side panel, and hit start. It goes through each listing and extracts:
+Geo Bucket is a robust Chrome extension designed to scrape B2B leads from Google Maps at scale. 
 
-- Business name, address, and category
-- Phone number
-- Website URL
-- Email addresses (crawled from the business website)
-- Star rating and review count
-- Social media links (Facebook, Instagram, etc.) when available
+You search for a target (e.g., "restaurants in Miami"), start the engine, and it autonomously sweeps through the listings. It extracts standard Maps data (names, phones, addresses, ratings) and then deep-crawls the linked business websites to pull emails and social media profiles.
 
-When it's done, you export everything as a `.csv` or `.xlsx` file. That's it.
-
-I built this because I was doing cold outreach for B2B clients and got tired of manually clicking through Maps listings one by one. Copying names into spreadsheets, hunting for emails on websites, checking for social pages. It was taking hours for maybe 50 leads. Geo Bucket does the same thing in a few minutes.
+I built this because manual prospecting is a massive bottleneck in B2B sales. The goal was to build a scraper that runs locally, bypasses rate limits, handles captchas automatically, and outputs data that is actually ready to be pushed to a CRM—no manual cleaning required.
 
 <br />
 
-## How it works
+## Core Architecture & Features
 
-The extension runs entirely in your browser. There's no server-side scraping, no proxy network, nothing shady. It reads the same publicly visible data you'd see if you clicked through each listing yourself, just faster.
+This isn't just a basic HTML/JS scraper. The extension is built as a complete SaaS product inside the browser.
 
-A few things worth mentioning:
+### The Stack
+- **Frontend**: React 18, Vite, and TailwindCSS. The UI features a custom glassmorphic design system, WebGL shader backgrounds, and Lottie animations for a premium, weightless feel.
+- **Backend**: 100% serverless, running on Google Apps Script. It handles Google OAuth identity mapping, 3-day trial lifecycles, and license validation.
+- **Security**: The offline fallback is locked down. API endpoints are XOR-obfuscated, and the backend generates HMAC-SHA256 signatures to prevent offline tampering of the license state.
 
-**Rate limiting** — It doesn't blast through results. There are built-in randomized delays between actions so it behaves like a normal user browsing Maps. This keeps your account safe.
+### Scraping Engine
+- **Data Interceptor Pipeline**: The engine hooks directly into `chrome.storage.local` via `interceptor.js`, transforming raw, messy JSON payloads from Maps into clean, normalized business records on the fly.
+- **2Captcha Integration**: Automatically intercepts and solves Google Maps captchas in the background. You don't have to sit there babysitting the scraper.
+- **Deep Web Crawling**: Maps rarely provides emails. The engine spins up background workers to visit the business's website and scrape contact forms, `mailto:` links, and social footprints (Facebook, Instagram, LinkedIn).
+- **Anti-Ban Mechanics**: Built-in humanized delays and request jitter prevent Google from flagging your session.
 
-**Email crawling** — Most Maps listings don't show email addresses directly. Geo Bucket follows the website link on each listing and scans the page for email addresses, contact forms, and social links. This is where most of the value comes from.
-
-**De-duplication** — If you run multiple scraping sessions (different searches, different areas), it tracks what you've already collected and removes duplicates automatically.
-
-**Local processing** — Your data never leaves your machine. Exports are generated client-side in the browser. Nothing gets uploaded anywhere.
-
-<br />
-
-## Installation
-
-1. Click the green **Code** button above and select **Download ZIP**
-2. Unzip the folder somewhere on your computer
-3. Open `chrome://extensions` in Chrome
-4. Turn on **Developer Mode** (top right toggle)
-5. Click **Load Unpacked** and point it to the unzipped folder
-6. Pin Geo Bucket to your toolbar
-
-To run your first scrape: open Google Maps, search for a business type + location, click the Geo Bucket icon to open the side panel, and press Start.
-
-<br />
-
-## Who is this for?
-
-Mostly people doing outbound sales, lead gen, or prospecting:
-
-- **Agency owners** who need prospect lists for clients. Search for a niche + city, get back a clean spreadsheet with contact info.
-- **Sales teams** filling their pipeline. Filter by rating and review count to focus on established businesses, export directly into whatever CRM you use.
-- **Freelancers** looking for clients. Find businesses in your industry that have websites and active reviews (which usually means they understand the value of the services you're selling).
-
-It also works well for market research, competitive analysis, or just finding a list of businesses in a specific area.
+### Monetization & Payments
+- **Crypto Native**: Fully automated crypto checkouts using the NowPayments API. Webhooks trigger the backend to generate a license key and dispatch a styled HTML email automatically.
+- **bKash Integration**: Localized manual payment flow for regional users.
 
 <br />
 
 ## What it extracts
 
-| Field | Details |
+When you export to `.CSV` or `.XLSX`, the data is already formatted. 
+
+| Field | Source |
 | :--- | :--- |
-| Business Name | As listed on Google Maps |
-| Phone | From the Maps listing info panel |
-| Email | Crawled from the linked business website |
-| Website | Direct URL from the listing |
-| Address | Full street address |
-| Rating | Star rating + total review count |
-| Category | Google-assigned type (e.g., Plumber, Restaurant) |
-| Social Links | Facebook, Instagram, etc. when available |
+| **Business Name** | Google Maps metadata |
+| **Phone Number (1 & 2)** | Google Maps + website fallbacks |
+| **Email Address** | Deep-crawled from the business website |
+| **Website URL** | Direct URL (unwrapped from Google's redirect tracker) |
+| **Address Data** | Split into Full Address, City, State, Zip, and Country |
+| **Rating & Reviews** | Star rating and total review count |
+| **Category** | Primary industry classification |
+| **Social Links** | Facebook, Instagram, Twitter/X, and LinkedIn |
+| **Working Hours** | Operating schedule |
 
 <br />
 
-## Tech details
+## Installation
 
-| | |
-| :--- | :--- |
-| Platform | Chrome Extension (Manifest V3) |
-| UI | Custom design system, WebGL backgrounds |
-| Scraping | DOM traversal + async interceptor |
-| Export | Client-side CSV/XLSX generation |
-| Auth | Google OAuth 2.0 |
+Everything runs locally in your browser. No data is sent to my servers.
+
+1. Click the green **Code** button above and select **Download ZIP**
+2. Unzip the folder to a permanent directory on your machine
+3. Open `chrome://extensions` in Chrome
+4. Turn on **Developer Mode** (top right toggle)
+5. Click **Load Unpacked** and select the unzipped `Geo-Bucket` folder
+6. Pin Geo Bucket to your toolbar
+
+<br />
+
+## Getting Started
+
+1. Go to Google Maps and search for a niche and location (e.g., "plumbers in Chicago").
+2. Click the Geo Bucket icon to open the React side panel.
+3. Configure your 2Captcha API key in the settings (optional, but highly recommended for large scrapes).
+4. Hit **Start**.
+5. Once the sweep is complete, click **Export** to generate your CSV or XLSX file client-side.
 
 <br />
 
 ## FAQ
 
-**Will this get my Google account banned?**
-It uses randomized timing and human-like patterns. I've been using it daily for months without issues. That said, don't scrape thousands of results in one sitting, be reasonable.
+**Does my data leave my computer?**
+No. The scraping and export generation happen entirely client-side. The only thing that touches the backend is your Google Identity (for the free trial) and license validation checks.
 
-**Is my data private?**
-Yes. Everything runs locally in your browser. No data is sent to any server.
-
-**Free vs Pro?**
-Free gives you a limited number of extractions to try it out. Pro removes the limits and adds email crawling, XLSX exports, and a few other things.
-
-**Which Maps domains does it support?**
-All of them. maps.google.com, .co.uk, .com.au, etc.
+**Can I run multiple searches?**
+Yes. The extension tracks your current session and automatically deduplicates leads if you run overlapping searches.
 
 <br />
 
