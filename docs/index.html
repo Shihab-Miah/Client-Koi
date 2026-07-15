@@ -581,12 +581,19 @@
         /* Utility classes for GSAP */
         .gsap-reveal { opacity: 0; visibility: hidden; }
 
+        .footer-brand {
+            grid-column: span 2;
+        }
+
         @media (max-width: 768px) {
             .hero {
                 padding-top: 120px;
             }
             .glass-panel {
                 padding: 30px 20px !important;
+            }
+            .footer-brand {
+                grid-column: span 1;
             }
         }
     </style>
@@ -717,7 +724,7 @@
         <div class="container">
             <div class="footer-grid">
                 
-                <div class="footer-col" style="grid-column: span 2;">
+                <div class="footer-col footer-brand">
                     <div class="footer-logo">
                         <img src="logo.png" alt="Geo Bucket Logo">
                         Geo Bucket
@@ -754,16 +761,18 @@
 
                 <div class="footer-col">
                     <h4>Support / Contact</h4>
-                    <div class="qr-card">
-                        <div class="qr-image-wrapper">
-                            <!-- Standard QR Code as used in payment system -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/8801951838769" alt="WhatsApp QR Code">
+                    <a href="https://wa.me/8801951838769" target="_blank" rel="noopener" style="text-decoration: none; display: inline-block;">
+                        <div class="qr-card">
+                            <div class="qr-image-wrapper">
+                                <!-- Sharp QR Code pointing to WhatsApp -->
+                                <img src="https://quickchart.io/qr?text=https%3A%2F%2Fwa.me%2F8801951838769&size=300&margin=0" alt="WhatsApp QR Code">
+                            </div>
+                            <div class="qr-text">
+                                <span class="material-symbols-outlined">forum</span>
+                                Chat on WhatsApp
+                            </div>
                         </div>
-                        <div class="qr-text">
-                            <span class="material-symbols-outlined">forum</span>
-                            Chat on WhatsApp
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
             </div>
