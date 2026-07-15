@@ -1,1 +1,23 @@
-!function(){const e=document.getElementById("initial-loading-overlay");if(!e)return;let o=!1;try{o=!!sessionStorage.getItem("hasLoadedBefore")}catch(e){}if(o)return e.style.display="none",void(e.style.opacity="0");"undefined"!=typeof chrome&&chrome.storage&&chrome.storage.session&&chrome.storage.session.get(["hasLoadedBefore"],function(o){o&&o.hasLoadedBefore&&(e.style.display="none",e.style.opacity="0")})}();
+(function() {
+  const overlay = document.getElementById("initial-loading-overlay");
+  if (!overlay) return;
+  let hasLoaded = false;
+  try {
+    hasLoaded = !!sessionStorage.getItem("hasLoadedBefore");
+  } catch (_) {}
+  if (hasLoaded) {
+    overlay.style.display = "none";
+    overlay.style.opacity = "0";
+    return;
+  }
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.session) {
+    chrome.storage.session.get(["hasLoadedBefore"], function(result) {
+      if (result && result.hasLoadedBefore) {
+        overlay.style.display = "none";
+        overlay.style.opacity = "0";
+      }
+    });
+  }
+})();
+
+

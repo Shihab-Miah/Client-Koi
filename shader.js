@@ -1,1 +1,115 @@
-!function(){const e=document.getElementById("lm-shader-canvas");if(!e)return;function n(){const n=Math.floor(.5*(e.clientWidth||1280)),t=Math.floor(.5*(e.clientHeight||720));e.width===n&&e.height===t||(e.width=n,e.height=t)}"undefined"!=typeof ResizeObserver&&new ResizeObserver(n).observe(e),n();const t=e.getContext("webgl",{powerPreference:"low-power"})||e.getContext("experimental-webgl");if(!t)return;function o(e,n){const o=t.createShader(e);return t.shaderSource(o,n),t.compileShader(o),o}const r=t.createProgram();t.attachShader(r,o(t.VERTEX_SHADER,"attribute vec2 a_position;\nvarying vec2 v_texCoord;\nvoid main() {\nv_texCoord = a_position * 0.5 + 0.5;\ngl_Position = vec4(a_position, 0.0, 1.0);\n}")),t.attachShader(r,o(t.FRAGMENT_SHADER,"precision highp float;\nvarying vec2 v_texCoord;\nuniform float u_time;\nuniform vec2 u_resolution;\n\nfloat hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }\nfloat noise(vec2 x) {\nvec2 i = floor(x);\nvec2 f = fract(x);\nfloat a = hash(i);\nfloat b = hash(i + vec2(1.0, 0.0));\nfloat c = hash(i + vec2(0.0, 1.0));\nfloat d = hash(i + vec2(1.0, 1.0));\nvec2 u = f * f * (3.0 - 2.0 * f);\nreturn mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;\n}\nfloat fbm(vec2 x) {\nfloat v = 0.0;\nfloat a = 0.5;\nvec2 shift = vec2(100.0);\nmat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));\nfor (int i = 0; i < 5; ++i) {\n    v += a * noise(x);\n    x = rot * x * 2.0 + shift;\n    a *= 0.5;\n}\nreturn v;\n}\n\nvoid main() {\nvec2 uv = v_texCoord * 2.0 - 1.0;\nuv.x *= u_resolution.x / u_resolution.y;\n\nfloat t = u_time * 0.2;\nvec2 q = vec2(0.0);\nq.x = fbm(uv + 0.00 * t);\nq.y = fbm(uv + vec2(1.0));\n\nvec2 r = vec2(0.0);\nr.x = fbm(uv + 1.0 * q + vec2(1.7, 9.2) + 0.15 * t);\nr.y = fbm(uv + 1.0 * q + vec2(8.3, 2.8) + 0.126 * t);\n\nfloat f = fbm(uv + r);\n\n// Spotify-like deep greens and dark tones\nvec3 col1 = vec3(0.05, 0.07, 0.05); // Deep dark background\nvec3 col2 = vec3(0.0, 0.3, 0.1);    // Dark green\nvec3 col3 = vec3(0.1, 0.6, 0.2);    // Vibrant green\nvec3 col4 = vec3(0.11, 0.72, 0.33); // Spotify primary green\n\nvec3 color = mix(col1, col2, clamp((f*f)*4.0, 0.0, 1.0));\ncolor = mix(color, col3, clamp(length(q), 0.0, 1.0));\ncolor = mix(color, col4, clamp(length(r.x), 0.0, 1.0));\n\n// Glow highlight\ncolor += vec3(0.2, 0.9, 0.4) * (1.0 - smoothstep(0.0, 0.3, abs(f - 0.5))) * 0.3;\n\n// Add subtle particles\nfloat particles = 0.0;\nfor(int i=0; i<3; i++) {\n    vec2 offset = vec2(noise(vec2(float(i), t * 0.5)), noise(vec2(t * 0.3, float(i))));\n    float d = length(fract(uv * 4.0 + offset) - 0.5);\n    particles += smoothstep(0.1, 0.0, d) * 0.8;\n}\ncolor += col4 * particles;\n\ngl_FragColor = vec4(color, 1.0);\n}")),t.linkProgram(r),t.useProgram(r);const i=t.createBuffer();t.bindBuffer(t.ARRAY_BUFFER,i),t.bufferData(t.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),t.STATIC_DRAW);const c=t.getAttribLocation(r,"a_position");t.enableVertexAttribArray(c),t.vertexAttribPointer(c,2,t.FLOAT,!1,0,0);const a=t.getUniformLocation(r,"u_time"),f=t.getUniformLocation(r,"u_resolution");!function o(r){"undefined"==typeof ResizeObserver&&n(),t.viewport(0,0,e.width,e.height),a&&t.uniform1f(a,.001*r),f&&t.uniform2f(f,e.width,e.height),t.drawArrays(t.TRIANGLE_STRIP,0,4),requestAnimationFrame(o)}(0)}();
+(function() {
+  const canvas = document.getElementById('lm-shader-canvas');
+  if (!canvas) return;
+  const pixelScale = 0.5; // Render at 50% resolution to save GPU
+  function syncSize() {
+    const w = Math.floor((canvas.clientWidth || 1280) * pixelScale);
+    const h = Math.floor((canvas.clientHeight || 720) * pixelScale);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncSize).observe(canvas);
+  syncSize();
+  const gl = canvas.getContext('webgl', { powerPreference: "low-power" }) || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+v_texCoord = a_position * 0.5 + 0.5;
+gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+float noise(vec2 x) {
+vec2 i = floor(x);
+vec2 f = fract(x);
+float a = hash(i);
+float b = hash(i + vec2(1.0, 0.0));
+float c = hash(i + vec2(0.0, 1.0));
+float d = hash(i + vec2(1.0, 1.0));
+vec2 u = f * f * (3.0 - 2.0 * f);
+return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+float fbm(vec2 x) {
+float v = 0.0;
+float a = 0.5;
+vec2 shift = vec2(100.0);
+mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+for (int i = 0; i < 5; ++i) {
+    v += a * noise(x);
+    x = rot * x * 2.0 + shift;
+    a *= 0.5;
+}
+return v;
+}
+
+void main() {
+vec2 uv = v_texCoord * 2.0 - 1.0;
+uv.x *= u_resolution.x / u_resolution.y;
+
+float t = u_time * 0.2;
+vec2 q = vec2(0.0);
+q.x = fbm(uv + 0.00 * t);
+q.y = fbm(uv + vec2(1.0));
+
+vec2 r = vec2(0.0);
+r.x = fbm(uv + 1.0 * q + vec2(1.7, 9.2) + 0.15 * t);
+r.y = fbm(uv + 1.0 * q + vec2(8.3, 2.8) + 0.126 * t);
+
+float f = fbm(uv + r);
+
+// Spotify-like deep greens and dark tones
+vec3 col1 = vec3(0.05, 0.07, 0.05); // Deep dark background
+vec3 col2 = vec3(0.0, 0.3, 0.1);    // Dark green
+vec3 col3 = vec3(0.1, 0.6, 0.2);    // Vibrant green
+vec3 col4 = vec3(0.11, 0.72, 0.33); // Spotify primary green
+
+vec3 color = mix(col1, col2, clamp((f*f)*4.0, 0.0, 1.0));
+color = mix(color, col3, clamp(length(q), 0.0, 1.0));
+color = mix(color, col4, clamp(length(r.x), 0.0, 1.0));
+
+// Glow highlight
+color += vec3(0.2, 0.9, 0.4) * (1.0 - smoothstep(0.0, 0.3, abs(f - 0.5))) * 0.3;
+
+// Add subtle particles
+float particles = 0.0;
+for(int i=0; i<3; i++) {
+    vec2 offset = vec2(noise(vec2(float(i), t * 0.5)), noise(vec2(t * 0.3, float(i))));
+    float d = length(fract(uv * 4.0 + offset) - 0.5);
+    particles += smoothstep(0.1, 0.0, d) * 0.8;
+}
+color += col4 * particles;
+
+gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s); return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();

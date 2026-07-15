@@ -305,7 +305,7 @@
 
     /* ---------- MapLeadr AI Animation & Floating ---------- */
     body:not(.is-premium) .lm-radar-lottie {
-      filter: hue-rotate(-107deg) saturate(1.5) !important;
+      /* Removed hue-rotate filter so logo retains original color */
     }
     @keyframes pulse-glow {
       0% { box-shadow: 0 0 15px var(--lm-primary-dim), 0 0 30px var(--lm-primary-dim); opacity: 0.8; }
@@ -702,7 +702,7 @@
 <body>
     <!-- Initial Loading Screen -->
     <div id="initial-loading-overlay">
-        <dotlottie-player id="lottie-player" src="/sonar_radar.lottie" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        <img id="lottie-player" src="/logo.png" style="width: 200px; height: 200px; border-radius: 20px; object-fit: contain;" alt="Logo">
         <div id="loading-news">Initializing Geo Bucket Engine...</div>
     </div>
     <script src="/loading.js"></script>

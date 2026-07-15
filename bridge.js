@@ -1,1 +1,8 @@
-chrome.runtime.onMessageExternal.addListener((e,n,s)=>{n.url&&(n.url.includes("localhost")||n.url.includes("127.0.0.1")||n.url.includes("geobucket.com"))&&"GEO_BUCKET_PING"===e.action&&s({status:"installed",version:chrome.runtime.getManifest().version})});
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+  // Allow localhost and geobucket
+  if (sender.url && (sender.url.includes("localhost") || sender.url.includes("127.0.0.1") || sender.url.includes("geobucket.com"))) {
+    if (request.action === "GEO_BUCKET_PING") {
+      sendResponse({ status: "installed", version: chrome.runtime.getManifest().version });
+    }
+  }
+});
