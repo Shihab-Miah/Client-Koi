@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shihab-miah.github.io/Geo-Bucket/sitemap.xml
