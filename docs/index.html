@@ -15,6 +15,8 @@
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <!-- SplitText alternative for typing effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js" defer></script>
 
     <style>
         :root {
@@ -42,19 +44,38 @@
             line-height: 1.6;
         }
 
-        /* Abstract glowing background shapes */
-        .ambient-glow {
+        /* ─── Antigravity Floating Orbs ─── */
+        .orb {
             position: fixed;
-            width: 80vw;
-            height: 80vh;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            filter: blur(100px);
-            opacity: 0.3;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
             pointer-events: none;
+            z-index: -1;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            top: 10%;
+            left: 10%;
+            animation: float-1 20s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #3b82f6; /* Blueish to mix with green */
+            bottom: 10%;
+            right: 10%;
+            animation: float-2 25s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes float-1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+        @keyframes float-2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-100px, -80px) scale(1.1); }
         }
 
         /* Glassmorphism Utilities */
@@ -64,6 +85,33 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover Glow Effect via JS CSS variables */
+        .glow-card {
+            transition: border-color 0.3s;
+        }
+        .glow-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(29, 185, 84, 0.06), transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .glow-card:hover::before {
+            opacity: 1;
+        }
+        .glow-card:hover {
+            border-color: rgba(29, 185, 84, 0.3);
+        }
+        .glow-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .container {
@@ -101,8 +149,10 @@
         }
 
         .logo img {
-            width: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(29,185,84,0.3);
         }
 
         /* Buttons */
@@ -112,19 +162,34 @@
             gap: 8px;
             background: var(--accent);
             color: #000;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             cursor: pointer;
             box-shadow: 0 0 20px rgba(29, 185, 84, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg) translate(-100%, 0);
+            transition: transform 0.6s;
+        }
+
+        .btn-primary:hover::after {
+            transform: rotate(45deg) translate(100%, 0);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(29, 185, 84, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(29, 185, 84, 0.5);
         }
 
         /* Hero Section */
@@ -135,24 +200,35 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding-top: 100px;
+            padding-top: 120px;
             position: relative;
         }
 
         .badge {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
+            background: rgba(29, 185, 84, 0.1);
+            border: 1px solid rgba(29, 185, 84, 0.3);
             padding: 8px 16px;
             border-radius: 100px;
             font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: var(--accent);
             margin-bottom: 32px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(29,185,84,0.15);
+        }
+        .badge .dot {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 6vw, 5rem);
+            font-size: clamp(3rem, 6vw, 5.5rem);
             font-weight: 800;
             line-height: 1.1;
             letter-spacing: -0.04em;
@@ -160,6 +236,7 @@
             background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            min-height: 2.2em; /* Prevents layout shift during typing */
         }
 
         .hero p {
@@ -172,33 +249,52 @@
         /* 3D Product Preview */
         .product-preview-container {
             margin-top: 60px;
-            perspective: 1000px;
+            perspective: 1200px;
             width: 100%;
             max-width: 900px;
+            position: relative;
+        }
+
+        /* Adding a floating glowing disc under the browser */
+        .product-preview-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; left: 10%; width: 80%; height: 40px;
+            background: rgba(29,185,84,0.4);
+            filter: blur(40px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .product-preview-container.active::after {
+            opacity: 1;
         }
 
         .product-preview {
-            transform: rotateX(10deg);
+            transform: rotateX(15deg) translateY(20px);
             transform-style: preserve-3d;
-            transition: transform 0.5s ease;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .product-preview:hover {
-            transform: rotateX(0deg);
+        .product-preview-container:hover .product-preview {
+            transform: rotateX(0deg) translateY(0px);
         }
 
         .browser-mockup {
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .browser-header {
-            background: #1e293b;
-            padding: 12px;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 12px 16px;
             display: flex;
+            align-items: center;
             gap: 8px;
             border-bottom: 1px solid var(--border);
         }
@@ -211,6 +307,17 @@
         .browser-dot:nth-child(1) { background: #ef4444; }
         .browser-dot:nth-child(2) { background: #f59e0b; }
         .browser-dot:nth-child(3) { background: #22c55e; }
+        .browser-url {
+            margin-left: 16px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-grow: 1;
+            text-align: center;
+        }
 
         .browser-content {
             padding: 24px;
@@ -220,10 +327,16 @@
         }
 
         .mock-lead-card {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
             padding: 16px;
             border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .mock-lead-card:hover {
+            border-color: rgba(29, 185, 84, 0.3);
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.06);
         }
 
         .mock-lead-card h3 {
@@ -249,6 +362,8 @@
         /* Sections */
         .section {
             padding: 120px 0;
+            position: relative;
+            z-index: 10;
         }
 
         .section-header {
@@ -260,35 +375,6 @@
             font-size: 2.5rem;
             font-weight: 700;
             letter-spacing: -0.02em;
-        }
-
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            padding: 32px;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(29, 185, 84, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            margin-bottom: 20px;
         }
 
         /* Setup Video Section */
@@ -309,10 +395,17 @@
             position: relative;
             padding-bottom: 56.25%; /* 16:9 */
             height: 0;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(29,185,84,0.15);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .video-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(29,185,84,0.25);
+            border-color: rgba(29,185,84,0.4);
         }
 
         .video-wrapper iframe {
@@ -331,8 +424,8 @@
 
         .step-item {
             position: relative;
-            padding-left: 56px;
-            margin-bottom: 32px;
+            padding-left: 64px;
+            margin-bottom: 40px;
         }
 
         .step-item::before {
@@ -341,8 +434,8 @@
             position: absolute;
             left: 0;
             top: 0;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             background: var(--surface-2);
             border: 1px solid var(--accent);
             color: var(--accent);
@@ -351,27 +444,64 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 1.2rem;
             font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 0 15px rgba(29,185,84,0.2);
         }
 
         .step-title {
-            font-weight: 600;
-            font-size: 1.125rem;
-            margin-bottom: 4px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 6px;
         }
 
         .step-desc {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .bangla-text {
             display: none;
             color: #cbd5e1;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            padding-left: 12px;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            padding-left: 16px;
             border-left: 2px solid var(--accent);
+            font-weight: 500;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(29, 185, 84, 0.1);
+            border: 1px solid rgba(29, 185, 84, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            margin-bottom: 24px;
+            box-shadow: inset 0 0 20px rgba(29,185,84,0.05);
+        }
+        
+        .feature-icon .material-symbols-outlined {
+            font-size: 28px;
         }
 
         /* Tech Stack */
@@ -379,27 +509,51 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
+            gap: 16px;
             max-width: 800px;
             margin: 0 auto;
         }
 
         .tech-pill {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: var(--surface-1);
             border: 1px solid var(--border);
             border-radius: 100px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .tech-pill:hover {
+            border-color: var(--accent);
+            color: #fff;
+            background: rgba(29,185,84,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(29,185,84,0.15);
         }
 
         /* Footer */
         footer {
             border-top: 1px solid var(--border);
-            padding: 40px 0;
+            padding: 60px 0 40px;
             text-align: center;
             color: var(--text-muted);
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .footer-logo img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
         }
 
         /* Utility classes for GSAP */
@@ -408,15 +562,17 @@
 </head>
 <body>
 
-    <div class="ambient-glow"></div>
+    <!-- Antigravity Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
     <nav>
         <div class="container nav-inner">
             <div class="logo">
-                <img src="../icons/48x48.png" alt="Geo Bucket Logo">
+                <img src="logo.png" alt="Geo Bucket Logo">
                 Geo Bucket
             </div>
-            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
+            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
                 Download
             </a>
@@ -424,23 +580,30 @@
     </nav>
 
     <header class="hero container">
-        <div class="badge gsap-hero">Manifest V3 Optimized</div>
-        <h1 class="gsap-hero">Extract hidden leads.<br>Scale your outreach.</h1>
+        <div class="badge gsap-hero">
+            <span class="dot"></span>
+            Manifest V3 Optimized
+        </div>
+        
+        <!-- Typing effect container -->
+        <h1 class="gsap-hero"><span id="typewriter"></span><span class="cursor" style="color:var(--accent);">_</span></h1>
+        
         <p class="gsap-hero">The ultimate Google Maps scraper built for B2B professionals. Pull verified emails, numbers, and websites with zero external API costs.</p>
         
         <div class="gsap-hero">
-            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary">
+            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="padding: 16px 32px; font-size: 1.1rem;">
                 <span class="material-symbols-outlined">download</span>
-                Download Extension
+                Download Extension Free
             </a>
         </div>
 
-        <div class="product-preview-container gsap-hero" style="margin-top: 80px;">
+        <div class="product-preview-container gsap-hero">
             <div class="product-preview browser-mockup">
                 <div class="browser-header">
                     <div class="browser-dot"></div>
                     <div class="browser-dot"></div>
                     <div class="browser-dot"></div>
+                    <div class="browser-url">google.com/maps — Geo Bucket Active</div>
                 </div>
                 <div class="browser-content">
                     <div class="mock-lead-card">
@@ -466,85 +629,91 @@
         </div>
     </header>
 
+    <!-- Setup Guide moved directly below Hero per user request -->
+    <section class="section container">
+        <div class="glass-panel" style="padding: 60px 40px; border-radius: 40px;">
+            <div class="section-header gsap-reveal" style="margin-bottom: 40px;">
+                <h2>Quick Setup Guide</h2>
+                <p style="color: var(--text-muted); margin-top: 8px; font-size: 1.1rem;">Install in under 2 minutes. No developer account required.</p>
+            </div>
+            
+            <div class="setup-container">
+                <div class="video-wrapper gsap-reveal">
+                    <!-- Embedded YouTube Video (poFPbXIHhzo) -->
+                    <iframe src="https://www.youtube-nocookie.com/embed/poFPbXIHhzo?autoplay=0&rel=0&modestbranding=1" title="Geo Bucket Setup Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                
+                <div class="gsap-reveal">
+                    <ul class="steps-list">
+                        <li class="step-item">
+                            <div class="step-title">Download & Extract</div>
+                            <div class="step-desc">Click download to get the ZIP archive, then Right-Click -> Extract All.</div>
+                            <div class="bangla-text">প্রথমে জিপ (ZIP) ফাইলটি ডাউনলোড করুন এবং ফাইলটি Extract করে নিন।</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-title">Open Chrome Extensions</div>
+                            <div class="step-desc">Navigate to <code style="background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">chrome://extensions</code> in your browser URL bar.</div>
+                            <div class="bangla-text">এবার ক্রোম ব্রাউজারের মেনু থেকে Manage Extensions পেজটি ওপেন করুন।</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-title">Enable Developer Mode</div>
+                            <div class="step-desc">Toggle the "Developer mode" switch in the top right corner.</div>
+                            <div class="bangla-text">ডানপাশের উপরের কোণায় থাকা 'Developer mode' অপশনটি চালু করে দিন।</div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-title">Load Unpacked</div>
+                            <div class="step-desc">Click the "Load unpacked" button and select your extracted folder.</div>
+                            <div class="bangla-text">এরপর 'Load unpacked' বাটনে ক্লিক করে আপনার ফোল্ডারটি সিলেক্ট করুন।</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section container">
         <div class="section-header gsap-reveal">
             <h2>Built for Scale & Stealth</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 8px;">Everything you need to bypass blocks and build your pipeline.</p>
         </div>
         <div class="features-grid">
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">hub</span></div>
-                <h3 style="margin-bottom: 8px;">Interceptor Engine</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Interceptor Engine</h3>
                 <p class="text-muted">Patches native storage at runtime to capture clean lead data directly from the DOM before rendering.</p>
             </div>
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">smart_toy</span></div>
-                <h3 style="margin-bottom: 8px;">2Captcha Bypass</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">2Captcha Bypass</h3>
                 <p class="text-muted">Automated CAPTCHA solving keeps your scraping sessions running overnight without manual intervention.</p>
             </div>
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">shield</span></div>
-                <h3 style="margin-bottom: 8px;">Anti-Ban Mechanics</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Anti-Ban Mechanics</h3>
                 <p class="text-muted">Simulates human mouse movements, scrolling patterns, and randomized delays to protect your accounts.</p>
             </div>
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">travel_explore</span></div>
-                <h3 style="margin-bottom: 8px;">Deep Web Crawling</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Deep Web Crawling</h3>
                 <p class="text-muted">Automatically visits extracted websites to find hidden email addresses and social media profiles.</p>
             </div>
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">dataset</span></div>
-                <h3 style="margin-bottom: 8px;">One-Click Export</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">One-Click Export</h3>
                 <p class="text-muted">Download your entire compiled database as CSV or XLSX immediately ready for CRM import.</p>
             </div>
-            <div class="glass-panel feature-card gsap-reveal">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
                 <div class="feature-icon"><span class="material-symbols-outlined">dock_to_right</span></div>
-                <h3 style="margin-bottom: 8px;">Native Side Panel</h3>
+                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Native Side Panel</h3>
                 <p class="text-muted">Operates seamlessly in Chrome's side panel, letting you browse normally while data collects.</p>
             </div>
         </div>
     </section>
 
-    <section class="section container" style="background: rgba(255,255,255,0.01); border-radius: 40px; border: 1px solid var(--border);">
-        <div class="section-header gsap-reveal">
-            <h2>Quick Setup Guide</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">Install in under 2 minutes. No developer account required.</p>
-        </div>
-        
-        <div class="setup-container">
-            <div class="gsap-reveal">
-                <ul class="steps-list">
-                    <li class="step-item">
-                        <div class="step-title">Download & Extract</div>
-                        <div class="step-desc">Click download to get the ZIP archive, then Right-Click -> Extract All.</div>
-                        <div class="bangla-text">প্রথমে জিপ (ZIP) ফাইলটি ডাউনলোড করুন এবং ফাইলটি Extract করে নিন।</div>
-                    </li>
-                    <li class="step-item">
-                        <div class="step-title">Open Chrome Extensions</div>
-                        <div class="step-desc">Navigate to <code style="background: var(--surface-2); padding: 2px 6px; border-radius: 4px;">chrome://extensions</code> in your browser URL bar.</div>
-                        <div class="bangla-text">এবার ক্রোম ব্রাউজারের মেনু থেকে Manage Extensions পেজটি ওপেন করুন।</div>
-                    </li>
-                    <li class="step-item">
-                        <div class="step-title">Enable Developer Mode</div>
-                        <div class="step-desc">Toggle the "Developer mode" switch in the top right corner.</div>
-                        <div class="bangla-text">ডানপাশের উপরের কোণায় থাকা 'Developer mode' অপশনটি চালু করে দিন।</div>
-                    </li>
-                    <li class="step-item">
-                        <div class="step-title">Load Unpacked</div>
-                        <div class="step-desc">Click the "Load unpacked" button and select your extracted folder.</div>
-                        <div class="bangla-text">এরপর 'Load unpacked' বাটনে ক্লিক করে আপনার ফোল্ডারটি সিলেক্ট করুন।</div>
-                    </li>
-                </ul>
-            </div>
-            <div class="video-wrapper gsap-reveal">
-                <!-- Embedded YouTube Video -->
-                <iframe src="https://www.youtube-nocookie.com/embed/poFPbXIHhzo" title="Geo Bucket Setup Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-        </div>
-    </section>
-
     <section class="section container">
         <div class="section-header gsap-reveal">
-            <h2 style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 32px;">Powered by Enterprise-Grade Tech</h2>
+            <h2 style="font-size: 2rem; margin-bottom: 16px;">Powered by Enterprise-Grade Tech</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px;">Not a weekend script. A full-stack lead generation system.</p>
             <div class="tech-stack">
                 <div class="tech-pill">React 18</div>
                 <div class="tech-pill">Vite</div>
@@ -558,11 +727,11 @@
         </div>
     </section>
 
-    <section class="section container" style="text-align: center; padding-bottom: 160px;">
-        <div class="glass-panel gsap-reveal" style="padding: 80px 40px; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.2; z-index: 0;"></div>
-            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 24px; position: relative; z-index: 1;">Ready to build your pipeline?</h2>
-            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="position: relative; z-index: 1;">
+    <section class="section container" style="text-align: center; padding-bottom: 120px;">
+        <div class="glass-panel gsap-reveal glow-card" style="padding: 80px 40px; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: var(--accent); filter: blur(150px); opacity: 0.2; z-index: 0;"></div>
+            <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 32px; position: relative; z-index: 1;">Ready to build your pipeline?</h2>
+            <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="position: relative; z-index: 1; padding: 18px 40px; font-size: 1.2rem;">
                 <span class="material-symbols-outlined">download</span>
                 Download Geo Bucket Now
             </a>
@@ -571,11 +740,26 @@
 
     <footer>
         <div class="container">
+            <div class="footer-logo">
+                <img src="logo.png" alt="Geo Bucket Logo">
+                Geo Bucket
+            </div>
             <p>&copy; 2025 Geo Bucket. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
+        // JS Hover Glow effect on cards
+        document.querySelectorAll('.glow-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
         // Localization logic: Check if user language is Bangla
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language || navigator.userLanguage;
@@ -595,13 +779,27 @@
                 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 
                 if (!prefersReducedMotion) {
-                    gsap.registerPlugin(ScrollTrigger);
+                    gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                    // Hero Entrance Animation
-                    gsap.fromTo('.gsap-hero', 
+                    // Typing Effect
+                    gsap.to("#typewriter", {
+                        duration: 2.5,
+                        text: "Extract hidden leads.<br>Scale your outreach.",
+                        ease: "none",
+                        delay: 0.2
+                    });
+                    gsap.to(".cursor", { opacity: 0, ease: "power2.inOut", repeat: -1, yoyo: true, duration: 0.6 });
+
+                    // Hero Entrance Animation (excluding h1 which is typed)
+                    gsap.fromTo('.gsap-hero:not(h1)', 
                         { y: 30, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }
+                        { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.5 }
                     );
+                    
+                    // Activate glow under browser mockup slightly after entrance
+                    setTimeout(() => {
+                        document.querySelector('.product-preview-container').classList.add('active');
+                    }, 1500);
 
                     // Scroll Reveal Animation for sections
                     const revealElements = document.querySelectorAll('.gsap-reveal');
@@ -610,7 +808,7 @@
                         gsap.set(el, { autoAlpha: 1 });
                         
                         gsap.fromTo(el, 
-                            { y: 50, opacity: 0 },
+                            { y: 60, opacity: 0 },
                             {
                                 y: 0, 
                                 opacity: 1, 
@@ -626,6 +824,7 @@
                     });
                 } else {
                     // Make visible instantly if motion is reduced
+                    document.getElementById('typewriter').innerHTML = "Extract hidden leads.<br>Scale your outreach.";
                     document.querySelectorAll('.gsap-reveal').forEach(el => {
                         el.style.opacity = '1';
                         el.style.visibility = 'visible';
