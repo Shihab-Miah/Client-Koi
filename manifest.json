@@ -33,6 +33,7 @@
         "<all_urls>"
       ],
       "resources": [
+        "*.png",
         "*.gif",
         "*.svg",
         "*.json",
