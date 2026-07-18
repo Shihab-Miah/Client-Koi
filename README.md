@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="icons/128x128.png" alt="Client Koi" width="80" />
+<img src="icons/128x128.png" alt="Client Koi Extension" width="80" />
 
-# Client Koi - Google Maps Scraper & B2B Lead Extractor
+# Client Koi - #1 Google Maps Scraper & B2B Lead Extractor
 
 **Client Koi** is the ultimate Google Maps scraper Chrome extension and B2B lead generation tool. Built on React and Manifest V3, this powerful Google Maps data extractor automates the scraping of local business profiles, bypassing captchas to instantly build a verified list of emails, phone numbers, and websites. If you are looking for the official Client Koi github repository, you have found it!
 
@@ -13,46 +13,46 @@
 
 <br />
 
-<img src="assets/banner.png" alt="Client Koi" width="720" />
+<img src="assets/banner.png" alt="Client Koi Google Maps Scraper" width="720" />
 
 </div>
 
 <br />
 
-## What is this?
+## What is Client Koi?
 
 Client Koi is a robust Chrome extension designed to scrape B2B leads from Google Maps at scale. 
 
-You search for a target (e.g., "restaurants in Miami"), start the engine, and it autonomously sweeps through the listings. It extracts standard Maps data (names, phones, addresses, ratings) and then deep-crawls the linked business websites to pull emails and social media profiles.
+You search for a target (e.g., "marketing agencies in New York"), start the engine, and it autonomously sweeps through the listings. It extracts standard Maps data (names, phones, addresses, ratings) and then deep-crawls the linked business websites to pull verified emails and social media profiles.
 
-I built this because manual prospecting is a massive bottleneck in B2B sales. The goal was to build a scraper that runs locally, bypasses rate limits, handles captchas automatically, and outputs data that is actually ready to be pushed to a CRM—no manual cleaning required.
+Manual prospecting is a massive bottleneck in B2B sales. The goal of Client Koi is to provide a local scraper that bypasses rate limits, handles captchas automatically, and outputs data that is ready to be pushed directly to your CRM—no manual cleaning required.
 
 <br />
 
 ## Core Architecture & Features
 
-This isn't just a basic HTML/JS scraper. The extension is built as a complete SaaS product inside the browser.
+This isn't just a basic HTML/JS scraper. The Client Koi extension is built as a complete SaaS product inside the browser.
 
 ### The Stack
 - **Frontend**: React 18, Vite, and TailwindCSS. The UI features a custom glassmorphic design system, WebGL shader backgrounds, and Lottie animations for a premium, weightless feel.
-- **Backend**: 100% serverless, running on Google Apps Script. It handles Google OAuth identity mapping, 3-day trial lifecycles, and license validation.
+- **Backend**: 100% serverless, running on Google Apps Script. It handles Google OAuth identity mapping, trial lifecycles, and license validation.
 - **Security**: The offline fallback is locked down. API endpoints are XOR-obfuscated, and the backend generates HMAC-SHA256 signatures to prevent offline tampering of the license state.
 
 ### Scraping Engine
-- **Data Interceptor Pipeline**: The engine hooks directly into `chrome.storage.local` via `interceptor.js`, transforming raw, messy JSON payloads from Maps into clean, normalized business records on the fly.
-- **2Captcha Integration**: Automatically intercepts and solves Google Maps captchas in the background. You don't have to sit there babysitting the scraper.
+- **Data Interceptor Pipeline**: The engine hooks directly into `chrome.storage.local`, transforming raw, messy JSON payloads from Maps into clean, normalized business records on the fly.
+- **Smart Captcha Bypass**: Automatically intercepts and solves Google Maps captchas in the background. You don't have to sit there babysitting the scraper.
 - **Deep Web Crawling**: Maps rarely provides emails. The engine spins up background workers to visit the business's website and scrape contact forms, `mailto:` links, and social footprints (Facebook, Instagram, LinkedIn).
 - **Anti-Ban Mechanics**: Built-in humanized delays and request jitter prevent Google from flagging your session.
 
 ### Monetization & Payments
-- **Crypto Native**: Fully automated crypto checkouts using the NowPayments API. Webhooks trigger the backend to generate a license key and dispatch a styled HTML email automatically.
+- **Crypto Native**: Fully automated crypto checkouts using the NOWPayments API. Webhooks trigger the backend to generate a license key and dispatch a styled HTML email automatically.
 - **bKash Integration**: Localized manual payment flow for regional users.
 
 <br />
 
 ## What it extracts
 
-When you export to `.CSV` or `.XLSX`, the data is already formatted. 
+When you initiate the Client Koi download and export to `.CSV` or `.XLSX`, the data is perfectly formatted. 
 
 | Field | Source |
 | :--- | :--- |
@@ -70,7 +70,7 @@ When you export to `.CSV` or `.XLSX`, the data is already formatted.
 
 ## Installation
 
-Everything runs locally in your browser. No data is sent to my servers.
+Everything runs locally in your browser. No data is sent to our servers.
 
 1. Click the green **Code** button above and select **Download ZIP**
 2. Unzip the folder to a permanent directory on your machine
@@ -107,6 +107,7 @@ Yes. The extension tracks your current session and automatically deduplicates le
 
 Made by [Shihab Miah](https://github.com/Shihab-Miah)
 
-<sub>© 2025 Client Koi</sub>
+<sub>© 2026 Client Koi</sub>
 
 </div>
+
