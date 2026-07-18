@@ -37,9 +37,9 @@ const textMap = {
 window.geo_bucket_is_valid = false;
 
 function updateGeoLogos(isPremium) {
-    const actualLogoSrc = isPremium ? chrome.runtime.getURL('logo-green.png') : chrome.runtime.getURL('logo-red.png');
+    const actualLogoSrc = isPremium ? chrome.runtime.getURL('yellow-logo.png') : chrome.runtime.getURL('logo-green.png');
     document.querySelectorAll('img[alt="Logo"]').forEach(img => {
-        if (img.src.includes('logo-green.png') || img.src.includes('logo-red.png') || img.src.includes('logo.png')) {
+        if (img.src.includes('logo-green.png') || img.src.includes('logo-red.png') || img.src.includes('yellow-logo.png') || img.src.includes('logo.png')) {
             img.src = actualLogoSrc;
         }
     });
@@ -127,6 +127,18 @@ antiBlinkStyle.textContent = `
   @keyframes lm-wobble-btn {
     0%, 100% { transform: translateY(0) scale(1); }
     50% { transform: translateY(-2px) scale(1.01); }
+  }
+  @keyframes lm-dot-blink-green {
+    0%, 100% { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+    50% { background: var(--lm-primary); box-shadow: 0 0 15px var(--lm-primary); }
+  }
+  @keyframes lm-dot-blink-blue {
+    0%, 100% { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+    50% { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+  }
+  @keyframes lm-dot-blink-red {
+    0%, 100% { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+    50% { background: #ef4444; box-shadow: 0 0 15px #ef4444; }
   }
   /* Finish Save & Download button override rules */
   .lm-finish-box {
@@ -249,7 +261,7 @@ function applyAllUIUpgrades() {
     }
   });
 
-  // 2. Transform the spinner into Geo Bucket Radar sweep HUD
+  // 2. Transform the spinner into Client Koi Radar sweep HUD
   const countContainers = document.querySelectorAll('div.absolute.inset-0.flex.flex-col');
   countContainers.forEach(container => {
     const parent = container.parentElement;
@@ -401,11 +413,11 @@ function applyAllUIUpgrades() {
       logoDiv.style.height = '55px';
       logoDiv.style.marginRight = '8px';
       
-      const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('logo-green.png') : chrome.runtime.getURL('logo-red.png');
+      const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('yellow-logo.png') : chrome.runtime.getURL('logo-green.png');
       logoDiv.innerHTML = `<img src="${logoSrc}" style="width: 100%; height: 100%; pointer-events: none; border-radius: 8px; object-fit: contain; animation: geo-spin 8s linear infinite;" alt="Logo">`;
     }
 
-    // 5.2. Animate the Geo Bucket text glow
+    // 5.2. Animate the Client Koi text glow
     // The native app might not use an h1, so we search for the exact text node container
     const allHeaderNodes = Array.from(headerContainer.querySelectorAll('div, span, h1, h2, p'));
     const titleNode = allHeaderNodes.find(n => n.childNodes.length === 1 && n.textContent.trim() === 'Client Koi');
@@ -1034,7 +1046,7 @@ function applyAllUIUpgrades() {
         topIconBox.style.width = '60px'; 
         topIconBox.style.height = '60px';
         topIconBox.className = 'flex items-center justify-center shrink-0';
-        const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('logo-green.png') : chrome.runtime.getURL('logo-red.png');
+        const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('yellow-logo.png') : chrome.runtime.getURL('logo-green.png');
         topIconBox.innerHTML = `<img src="${logoSrc}" style="width: 100%; height: 100%; pointer-events: none; border-radius: 8px; object-fit: contain; animation: geo-spin 8s linear infinite;" alt="Logo">`;
       }
 
@@ -1198,48 +1210,87 @@ function applyAllUIUpgrades() {
       
       const statusBtn = bar.querySelector('button');
       if (statusBtn) {
-        let statusText = statusBtn.textContent.toLowerCase();
-        const reactTextSpan = statusBtn.querySelector('.lm-react-text');
-        if (reactTextSpan) {
-            statusText = reactTextSpan.textContent.toLowerCase();
+        // Safe extraction: read only visible React text
+        let activeText = '';
+        Array.from(statusBtn.childNodes).forEach(child => {
+            if (child.classList && child.classList.contains('lm-custom-ui')) return;
+            let isVisible = true;
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                const style = window.getComputedStyle(child);
+                if (style.display === 'none' || style.visibility === 'hidden' || child.classList.contains('hidden')) {
+                    isVisible = false;
+                }
+            }
+            if (isVisible) {
+                activeText += child.textContent;
+            }
+        });
+        const statusText = activeText.toLowerCase();
+        
+        let isIdle = false;
+        let isRunning = false;
+        let isPaused = false;
+        
+        // Ultimate Timer-based Status Logic
+        const timeSpan = document.querySelector('span.text-2xl');
+        let timerHandled = false;
+        
+        if (timeSpan && timeSpan.textContent.includes(':')) {
+            const currentTimer = timeSpan.textContent.trim();
+            if (currentTimer !== '0:00' && currentTimer !== '00:00') {
+                timerHandled = true; // Timer > 0, timer rules apply
+                
+                if (!window.lmTimerTracker) window.lmTimerTracker = { lastText: '', lastChangedAt: Date.now() };
+                if (currentTimer !== window.lmTimerTracker.lastText) {
+                    window.lmTimerTracker.lastText = currentTimer;
+                    window.lmTimerTracker.lastChangedAt = Date.now();
+                }
+                const timeSinceLastChange = Date.now() - window.lmTimerTracker.lastChangedAt;
+                // If the timer has ticked in the last 2000ms, it is running
+                if (timeSinceLastChange < 2000) {
+                    isRunning = true;
+                } else {
+                    isPaused = true;
+                }
+            } else {
+                // Timer is explicitly 0:00
+                isIdle = true;
+                timerHandled = true;
+            }
         }
         
-        const isIdle = statusText.includes('waiting') || statusText.includes('initialize');
-        const isRunning = statusText.includes('running') || statusText.includes('scanning');
-        const isPaused = statusText.includes('pause') || statusText.includes('stopped') || statusText.includes('suspend') || statusText.includes('resume');
+        // Fallback to text logic if timer isn't on screen (e.g. on another tab)
+        if (!timerHandled) {
+            isIdle = statusText.includes('waiting') || statusText.includes('initialize');
+            isRunning = statusText.includes('pause') || statusText.includes('running') || statusText.includes('scanning') || statusText.includes('resuming');
+            isPaused = (statusText.includes('resume') && !statusText.includes('resuming')) || statusText.includes('stopped') || statusText.includes('suspend');
+        }
         
-        if (isIdle || isRunning || isPaused) {
+        // Fallback for FREEZED state if not idle, not running, and not paused
+        const isFreezed = !isIdle && !isRunning && !isPaused;
+        
+        if (isIdle || isRunning || isPaused || isFreezed) {
           bar.classList.add('lm-bottombar-upgraded');
           
-          // Completely restyle the bottom bar
           bar.style.background = 'rgba(13, 20, 29, 0.95)';
           bar.style.borderColor = 'rgba(var(--lm-primary-rgb), 0.15)';
           bar.style.padding = '0';
           
           statusBtn.style.background = 'transparent';
+          statusBtn.style.position = 'relative';
+          statusBtn.style.overflow = 'hidden';
+          statusBtn.style.border = 'none';
           
-          const setStatusHTML = (html, justifyClass) => {
-              if (statusBtn.querySelector('.lm-custom-ui')) {
-                  const ui = statusBtn.querySelector('.lm-custom-ui');
-                  if (ui.innerHTML !== html) ui.innerHTML = html;
-                  ui.className = `lm-custom-ui w-full flex items-center ${justifyClass}`;
-                  return;
+          const setStatusHTML = (html) => {
+              let overlay = statusBtn.querySelector('.lm-custom-ui');
+              if (!overlay) {
+                  overlay = document.createElement('div');
+                  statusBtn.appendChild(overlay);
               }
-              Array.from(statusBtn.childNodes).forEach(child => {
-                  if (child.nodeType === Node.TEXT_NODE && child.textContent.trim()) {
-                      const span = document.createElement('span');
-                      span.style.display = 'none';
-                      span.className = 'lm-react-text';
-                      statusBtn.insertBefore(span, child);
-                      span.appendChild(child);
-                  } else if (child.nodeType === Node.ELEMENT_NODE) {
-                      child.style.display = 'none';
-                  }
-              });
-              const ui = document.createElement('div');
-              ui.className = `lm-custom-ui w-full flex items-center ${justifyClass}`;
-              ui.innerHTML = html;
-              statusBtn.appendChild(ui);
+              overlay.className = 'lm-custom-ui';
+              // Use absolute positioning and a solid background to cover React's raw text completely
+              overlay.style.cssText = 'position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(13, 20, 29, 0.98); pointer-events: none; z-index: 10;';
+              if (overlay.innerHTML !== html) overlay.innerHTML = html;
           };
         
         if (isIdle) {
@@ -1247,79 +1298,42 @@ function applyAllUIUpgrades() {
           setStatusHTML(`
             <div style="display:flex; align-items:center; gap:10px;">
               <div style="width:8px; height:8px; border-radius:50%; background:#64748b;"></div>
-              <span style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:1px;">Ready to Scan</span>
+              <span style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:1px;">System Status : IDLE</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:10px; font-weight:800; color:var(--lm-primary); text-transform:uppercase; letter-spacing:0.5px; opacity:1; transition:opacity 0.2s;" class="lm-hover-label">Initialize</span>
-              <div style="width:32px; height:32px; border-radius:10px; border:1px solid rgba(var(--lm-primary-rgb),0.3); display:flex; align-items:center; justify-content:center; background:rgba(var(--lm-primary-rgb),0.15); transition:all 0.2s;">
-                <span class="material-symbols-outlined" style="font-size:16px; color:var(--lm-primary);">play_arrow</span>
-              </div>
-            </div>
-          `, 'justify-between');
+          `);
+        } else {
+          statusBtn.className = 'w-full flex items-center justify-center px-4 py-3 transition-colors group cursor-pointer';
           
-          statusBtn.onmouseenter = () => {
-            const label = statusBtn.querySelector('.lm-hover-label');
-            if (label) label.style.opacity = '1';
-            const iconBox = statusBtn.querySelector('div[style*="border-radius:10px"]');
-            if (iconBox) {
-              iconBox.style.background = 'rgba(var(--lm-primary-rgb),0.2)';
-              iconBox.style.borderColor = 'var(--lm-primary)';
-              iconBox.style.transform = 'scale(1.1)';
-            }
-          };
-          statusBtn.onmouseleave = () => {
-            const label = statusBtn.querySelector('.lm-hover-label');
-            if (label) label.style.opacity = '0';
-            const iconBox = statusBtn.querySelector('div[style*="border-radius:10px"]');
-            if (iconBox) {
-              iconBox.style.background = 'rgba(var(--lm-primary-rgb),0.08)';
-              iconBox.style.borderColor = 'rgba(var(--lm-primary-rgb),0.3)';
-              iconBox.style.transform = 'scale(1)';
-            }
-          };
-        } else if (isRunning || isPaused) {
-          // Centered layout for Active / Paused states
-          statusBtn.className = 'w-full flex items-center justify-center gap-10 px-4 py-3 transition-colors group cursor-pointer';
+          let stateText = 'FREEZED';
+          let stateColor = '#3b82f6'; // Blue
+          let blinkAnim = 'lm-dot-blink-blue';
           
-          const dotColor = isPaused ? 'var(--lm-primary)' : 'var(--lm-primary)';
-          const dotAnim = isPaused ? 'none' : 'lm-pulse-glow 2s infinite alternate';
-          const stateText = isPaused ? 'PAUSED' : 'ON';
-          
-          const actionColor = isPaused ? 'var(--lm-primary)' : '#ef4444';
-          const actionText = isPaused ? 'RESUME' : 'SUSPEND';
-          const actionIcon = isPaused ? 'play_circle' : 'pause_circle';
+          if (isRunning) {
+              stateText = 'RUNNING';
+              stateColor = 'var(--lm-primary)';
+              blinkAnim = 'lm-dot-blink-green';
+          } else if (isPaused) {
+              stateText = 'PAUSED';
+              stateColor = '#ef4444';
+              blinkAnim = 'lm-dot-blink-red';
+          }
           
           setStatusHTML(`
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:8px; height:8px; border-radius:50%; background:${dotColor}; box-shadow:0 0 10px ${dotColor}; animation: ${dotAnim};"></div>
-              <span style="font-size:12px; font-weight:800; color:#fff; text-shadow:0 0 10px rgba(255,255,255,0.3); letter-spacing:1px; text-transform:uppercase;">Scanner</span>
-              <span style="font-size:12px; font-weight:900; color:${dotColor}; text-shadow:0 0 10px ${dotColor}; letter-spacing:1px;">${stateText}</span>
+            <div style="display:flex; align-items:center; justify-content:center; gap:10px; width:100%;">
+              <div style="width:10px; height:10px; border-radius:50%; background:${stateColor}; box-shadow:0 0 10px ${stateColor}; animation: ${blinkAnim} 1.5s infinite;"></div>
+              <span style="font-size:13px; font-weight:800; color:#fff; text-shadow:0 0 10px rgba(255,255,255,0.3); letter-spacing:1px; text-transform:uppercase;">System Status :</span>
+              <span style="font-size:13px; font-weight:900; color:${stateColor}; text-shadow:0 0 10px ${stateColor}; letter-spacing:1px; text-transform:uppercase;">${stateText}</span>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:10px; font-weight:800; color:${actionColor}; text-shadow:0 0 10px ${actionColor}; text-transform:uppercase; letter-spacing:1px;">${actionText}</span>
-              <div style="width:32px; height:32px; border-radius:10px; border:1px solid ${actionColor}80; display:flex; align-items:center; justify-content:center; background:${actionColor}15; transition:all 0.2s;" class="lm-action-btn">
-                <span class="material-symbols-outlined" style="font-size:20px; color:${actionColor};">${actionIcon}</span>
-              </div>
-            </div>
-          `, 'justify-center gap-10');
+          `);
           
+          // Hover effect for the entire bar
           statusBtn.onmouseenter = () => {
-            const btn = statusBtn.querySelector('.lm-action-btn');
-            if (btn) {
-              btn.style.background = `${actionColor}30`;
-              btn.style.borderColor = actionColor;
-              btn.style.transform = 'scale(1.1)';
-              btn.style.boxShadow = `0 0 15px ${actionColor}60`;
-            }
+              const overlay = statusBtn.querySelector('.lm-custom-ui');
+              if (overlay) overlay.style.background = 'rgba(20, 30, 42, 0.98)';
           };
           statusBtn.onmouseleave = () => {
-            const btn = statusBtn.querySelector('.lm-action-btn');
-            if (btn) {
-              btn.style.background = `${actionColor}15`;
-              btn.style.borderColor = `${actionColor}80`;
-              btn.style.transform = 'scale(1)';
-              btn.style.boxShadow = 'none';
-            }
+              const overlay = statusBtn.querySelector('.lm-custom-ui');
+              if (overlay) overlay.style.background = 'rgba(13, 20, 29, 0.98)';
           };
         }
       }
@@ -1406,10 +1420,10 @@ function applyAllUIUpgrades() {
     }
     window.lmAllLeadsLoadingPromise = new Promise((resolve) => {
       try {
-        let dbName = "Geo Bucket_v5.4.2";
+        let dbName = "Client Koi_v5.4.2";
         if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest) {
            const manifest = chrome.runtime.getManifest();
-           dbName = (manifest.name || "Geo Bucket") + "_v" + (manifest.version || "5.4.2");
+           dbName = (manifest.name || "Client Koi") + "_v" + (manifest.version || "5.4.2");
         }
         const request = indexedDB.open(dbName);
         request.onsuccess = function(event) {
@@ -3073,7 +3087,7 @@ function formatTableCells(table, ths) {
 }
 
 // ==========================================
-// GEO BUCKET - LICENSING & SUBSCRIPTION UI LOCK
+// Client Koi - LICENSING & SUBSCRIPTION UI LOCK
 // ==========================================
 
 // Perform the subscription check and lock/unlock the UI accordingly
@@ -3773,7 +3787,7 @@ async function showLicensingOverlay(status, paymentUrl, closable = false) {
                            ${qrHTML}
                        </div>
                        <div style="text-align: center; margin-top: auto; padding-top: 16px;">
-                           <a class="switch-link" id="switch-crypto" style="display: none;">Switch to International Payment ($9)</a>
+                           <a class="switch-link" id="switch-crypto" style="cursor: pointer;">Switch to International Payment ($9)</a>
                        </div>
                    </div>
                 </div>
@@ -3934,7 +3948,7 @@ async function showLicensingOverlay(status, paymentUrl, closable = false) {
     }
 
               try {
-            let initialState = 'BKASH'; // isBD ? 'BKASH' : 'CRYPTO';
+            let initialState = 'CRYPTO'; // isBD ? 'BKASH' : 'CRYPTO';
               if (status === 'LICENSE_REQUIRED') initialState = 'ACTIVATE';
               await renderState(initialState);
         } catch(e) {
@@ -4182,10 +4196,10 @@ function clearAllLeadsFromStorage() {
 
          // Clear IndexedDB store 'list'
          try {
-            let dbName = "Geo Bucket_v5.4.2";
+            let dbName = "Client Koi_v5.4.2";
             if (chrome.runtime && chrome.runtime.getManifest) {
                const manifest = chrome.runtime.getManifest();
-               dbName = (manifest.name || "Geo Bucket") + "_v" + (manifest.version || "5.4.2");
+               dbName = (manifest.name || "Client Koi") + "_v" + (manifest.version || "5.4.2");
             }
             const request = indexedDB.open(dbName);
             request.onsuccess = function(event) {
@@ -4198,12 +4212,12 @@ function clearAllLeadsFromStorage() {
                db.close();
             };
          } catch (e) {
-            console.error("Geo Bucket: Error clearing IndexedDB in clearAllLeadsFromStorage:", e);
+            console.error("Client Koi: Error clearing IndexedDB in clearAllLeadsFromStorage:", e);
          }
          
          if (keysToClear.length > 0) {
             chrome.storage.local.set(updateObj, () => {
-               console.log("Geo Bucket: Cleared leads and reset counters:", keysToClear);
+               console.log("Client Koi: Cleared leads and reset counters:", keysToClear);
                
                try {
                   chrome.runtime.sendMessage({ action: "clear_all_leads" });
@@ -4227,10 +4241,10 @@ function clearAllLeadsFromStorage() {
 function getLeadsCount() {
    return new Promise((resolve) => {
       try {
-         let dbName = "Geo Bucket_v5.4.2";
+         let dbName = "Client Koi_v5.4.2";
          if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest) {
             const manifest = chrome.runtime.getManifest();
-            dbName = (manifest.name || "Geo Bucket") + "_v" + (manifest.version || "5.4.2");
+            dbName = (manifest.name || "Client Koi") + "_v" + (manifest.version || "5.4.2");
          }
          const request = indexedDB.open(dbName);
          request.onsuccess = function(event) {
@@ -4265,7 +4279,7 @@ function getLeadsCount() {
 
 
 // ==========================================
-// GEO BUCKET - PERMANENT BRANDING INJECTION
+// Client Koi - PERMANENT BRANDING INJECTION
 // ==========================================
 (function injectPermanentLogo() {
   function getAvatarTheme(char, isPremium) {
@@ -4321,7 +4335,7 @@ function getLeadsCount() {
     ? `position: fixed; top: 20px; right: 20px; display: none; align-items: center; min-width: 48px; min-height: 48px; z-index: 99999; transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);`
     : `display: none; align-items: center; min-width: 48px; min-height: 48px; position: relative;`;
 
-         const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('logo-green.png') : chrome.runtime.getURL('logo-red.png');
+         const logoSrc = window.geo_bucket_is_valid ? chrome.runtime.getURL('yellow-logo.png') : chrome.runtime.getURL('logo-green.png');
          container.innerHTML = `
     <div style="display: flex; align-items: center; gap: 12px; background: ${isDataTab ? 'rgba(13,20,29,0.8)' : 'transparent'}; padding: ${isDataTab ? '4px 16px 4px 4px' : '0'}; border-radius: 50px; ${isDataTab ? 'border: 1px solid rgba(var(--lm-primary-rgb),0.2); box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px);' : ''}">
       <div style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; position: relative;">
@@ -4546,3 +4560,4 @@ function getLeadsCount() {
      });
   }
 })();
+

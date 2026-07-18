@@ -2,9 +2,9 @@
 
 <img src="icons/128x128.png" alt="Client Koi" width="80" />
 
-# Client Koi
+# Client Koi - Google Maps Scraper & B2B Lead Extractor
 
-A high-performance lead extraction engine for Google Maps. Built on React and Manifest V3, with a serverless backend, automated captcha bypassing, and a heavy focus on clean data output.
+**Client Koi** is the ultimate Google Maps scraper Chrome extension and B2B lead generation tool. Built on React and Manifest V3, this powerful Google Maps data extractor automates the scraping of local business profiles, bypassing captchas to instantly build a verified list of emails, phone numbers, and websites. If you are looking for the official Client Koi github repository, you have found it!
 
 [![Version](https://img.shields.io/badge/v7.1.2-stable-1DB954?style=flat-square&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Client-Koi)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Client-Koi)

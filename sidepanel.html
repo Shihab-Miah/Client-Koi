@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geo Bucket</title>
+    <title>Client Koi</title>
 
     <!-- Customize the manifest options -->
     <meta name="manifest.default_icon" content="/icon.png">
@@ -32,10 +32,10 @@
 
     /* ---------- CSS Variables (Stitch Design Tokens) ---------- */
     :root {
-      --lm-primary: #EF4444; /* Free Red */
-      --lm-primary-rgb: 239, 68, 68;
-      --lm-primary-hover: #F87171;
-      --lm-on-primary: #ffffff; /* White text on Red */
+      --lm-primary: #1DB954; /* Free Green */
+      --lm-primary-rgb: 29, 185, 84;
+      --lm-primary-hover: #53e076;
+      --lm-on-primary: #000000; /* Black text on Green */
       --lm-primary-dim: rgba(var(--lm-primary-rgb), 0.15);
       --lm-surface-0: rgba(13, 20, 29, 0.85); /* Base Layer */
       --lm-surface-1: rgba(25, 32, 41, 0.65); /* Middle Layer */
@@ -54,11 +54,11 @@
 
     /* Premium Pro Theme Override */
     body.is-premium {
-      /* Pro Green */
-      --lm-primary: #1DB954; 
-      --lm-primary-rgb: 29, 185, 84;
-      --lm-primary-hover: #53e076; 
-      --lm-on-primary: #000000; /* Black text on Green */
+      /* Pro Gold */
+      --lm-primary: #FBBF24; 
+      --lm-primary-rgb: 251, 191, 36;
+      --lm-primary-hover: #FCD34D; 
+      --lm-on-primary: #000000; /* Black text on Gold */
     }
 
     /* Global Transition for Theme Switching */
@@ -450,7 +450,7 @@
     }
 
     /* ================================================================
-       Geo Bucket — Upgraded lead cards & radar counter overlay styles
+       Client Koi — Upgraded lead cards & radar counter overlay styles
        ================================================================ */
     .lm-card-number {
       position: absolute !important;
@@ -703,7 +703,7 @@
     <!-- Initial Loading Screen -->
     <div id="initial-loading-overlay">
         <img id="lottie-player" src="/logo.png" style="width: 200px; height: 200px; border-radius: 20px; object-fit: contain;" alt="Logo">
-        <div id="loading-news">Initializing Geo Bucket Engine...</div>
+        <div id="loading-news">Initializing Client Koi Engine...</div>
     </div>
     <script src="/loading.js"></script>
 
