@@ -1,19 +1,19 @@
 <div align="center">
 
-<img src="icons/128x128.png" alt="Geo Bucket" width="80" />
+<img src="icons/128x128.png" alt="Client Koi" width="80" />
 
-# Geo Bucket
+# Client Koi
 
 A high-performance lead extraction engine for Google Maps. Built on React and Manifest V3, with a serverless backend, automated captcha bypassing, and a heavy focus on clean data output.
 
-[![Version](https://img.shields.io/badge/v7.1.2-stable-1DB954?style=flat-square&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
-[![Chrome](https://img.shields.io/badge/Manifest-V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
+[![Version](https://img.shields.io/badge/v7.1.2-stable-1DB954?style=flat-square&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Client-Koi)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Client-Koi)
+[![Chrome](https://img.shields.io/badge/Manifest-V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Client-Koi)
 [![License](https://img.shields.io/badge/License-Proprietary-E5E2E1?style=flat-square&labelColor=0A0A0A)](#license)
 
 <br />
 
-<img src="assets/banner.png" alt="Geo Bucket" width="720" />
+<img src="assets/banner.png" alt="Client Koi" width="720" />
 
 </div>
 
@@ -21,7 +21,7 @@ A high-performance lead extraction engine for Google Maps. Built on React and Ma
 
 ## What is this?
 
-Geo Bucket is a robust Chrome extension designed to scrape B2B leads from Google Maps at scale. 
+Client Koi is a robust Chrome extension designed to scrape B2B leads from Google Maps at scale. 
 
 You search for a target (e.g., "restaurants in Miami"), start the engine, and it autonomously sweeps through the listings. It extracts standard Maps data (names, phones, addresses, ratings) and then deep-crawls the linked business websites to pull emails and social media profiles.
 
@@ -76,15 +76,15 @@ Everything runs locally in your browser. No data is sent to my servers.
 2. Unzip the folder to a permanent directory on your machine
 3. Open `chrome://extensions` in Chrome
 4. Turn on **Developer Mode** (top right toggle)
-5. Click **Load Unpacked** and select the unzipped `Geo-Bucket` folder
-6. Pin Geo Bucket to your toolbar
+5. Click **Load Unpacked** and select the unzipped `Client-Koi` folder
+6. Pin Client Koi to your toolbar
 
 <br />
 
 ## Getting Started
 
 1. Go to Google Maps and search for a niche and location (e.g., "plumbers in Chicago").
-2. Click the Geo Bucket icon to open the React side panel.
+2. Click the Client Koi icon to open the React side panel.
 3. Configure your 2Captcha API key in the settings (optional, but highly recommended for large scrapes).
 4. Hit **Start**.
 5. Once the sweep is complete, click **Export** to generate your CSV or XLSX file client-side.
@@ -107,6 +107,6 @@ Yes. The extension tracks your current session and automatically deduplicates le
 
 Made by [Shihab Miah](https://github.com/Shihab-Miah)
 
-<sub>© 2025 Geo Bucket</sub>
+<sub>© 2025 Client Koi</sub>
 
 </div>
