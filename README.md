@@ -68,6 +68,13 @@ When you initiate the Client Koi download and export to `.CSV` or `.XLSX`, the d
 
 <br />
 
+## Prerequisites
+Before installing, ensure you have:
+- **Google Chrome v100+** (or a Chromium-based browser like Brave/Edge)
+- **Active 2Captcha Account** (Optional, but required for automated captcha bypassing during large scrapes)
+
+<br />
+
 ## Installation
 
 Everything runs locally in your browser. No data is sent to our servers.
@@ -81,17 +88,33 @@ Everything runs locally in your browser. No data is sent to our servers.
 
 <br />
 
-## Getting Started
+## Configuration & API Key Setup
 
-1. Go to Google Maps and search for a niche and location (e.g., "plumbers in Chicago").
-2. Click the Client Koi icon to open the React side panel.
-3. Configure your 2Captcha API key in the settings (optional, but highly recommended for large scrapes).
-4. Hit **Start**.
-5. Once the sweep is complete, click **Export** to generate your CSV or XLSX file client-side.
+To maximize the extraction engine without getting blocked by Google:
+
+1. Click the Client Koi extension icon in your Chrome toolbar.
+2. Navigate to the **Settings (Gear Icon)** in the side panel.
+3. **2Captcha API Key**: Paste your `2Captcha API Key` here. This allows the extension to automatically solve Google's "Unusual Traffic" captchas in the background.
+4. **Scraping Speed / Delays**: We recommend keeping the default dynamic jitter (2000ms - 4000ms). Lowering this below 1000ms significantly increases the risk of triggering Google's rate limiters.
 
 <br />
 
-## FAQ
+## Getting Started
+
+1. Go to Google Maps and search for a niche and location (e.g., "plumbers in Chicago").
+2. Open the Client Koi side panel.
+3. Hit **Start**.
+4. Once the sweep is complete, click **Export** to generate your CSV or XLSX file client-side.
+
+<br />
+
+## Troubleshooting & FAQ
+
+**Manifest V3 Warnings in Chrome Extensions Page?**
+If you see warnings about "Manifest V3" or "Service Workers" in `chrome://extensions`, you can safely ignore them. Client Koi uses the absolute latest Chrome extension architecture, and Google's developer mode sometimes flags standard background scripts. 
+
+**Google Maps DOM Updates / Scraper Breaking?**
+Google Maps frequently changes their underlying HTML structure. If the scraper suddenly stops pulling phone numbers, ensure you are on the absolute latest version (`v7.1.2`). We push silent updates to accommodate DOM changes.
 
 **Does my data leave my computer?**
 No. The scraping and export generation happen entirely client-side. The only thing that touches the backend is your Google Identity (for the free trial) and license validation checks.
@@ -101,11 +124,20 @@ Yes. The extension tracks your current session and automatically deduplicates le
 
 <br />
 
+## License
+
+This software is **Proprietary**.
+Unauthorized distribution, modification, or commercial resale of this source code is strictly prohibited without explicit written consent from the author. 
+
+<br />
+
 ---
 
 <div align="center">
 
 Made by [Shihab Miah](https://github.com/Shihab-Miah)
+
+[Instagram](https://www.instagram.com/client.koi/) &bull; [Facebook](https://www.facebook.com/Client.koi)
 
 <sub>© 2026 Client Koi</sub>
 

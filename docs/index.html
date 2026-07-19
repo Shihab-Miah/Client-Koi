@@ -51,6 +51,7 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo-red.png">
 
     <!-- Microsoft Clarity Tracking Code -->
     <script type="text/javascript">
@@ -134,6 +135,18 @@
         @keyframes float-2 {
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(-100px, -80px) scale(1.1); }
+        }
+
+        /* Screen Reader Only for SEO */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
         /* Glassmorphism Utilities */
@@ -650,7 +663,7 @@
         </div>
         
         <!-- Typing effect container -->
-        <h1 class="gsap-hero"><span id="typewriter"></span><span class="cursor" style="color:var(--accent);">_</span></h1>
+        <h1 class="gsap-hero"><span class="sr-only">Client Koi Google Maps Scraper & B2B Lead Extractor</span><span id="typewriter" aria-hidden="true"></span><span class="cursor" style="color:var(--accent);" aria-hidden="true">_</span></h1>
         
         <p class="gsap-hero">Stop wasting time searching manually. Build a massive database of B2B clients, extract contact info directly from Google Maps, and scale your agency outreach overnight.</p>
         
@@ -851,6 +864,18 @@
                             <a href="https://www.linkedin.com/in/shihab-miah-925781280/" target="_blank" rel="noopener">
                                 <span class="material-symbols-outlined">work</span>
                                 LinkedIn Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/client.koi/" target="_blank" rel="noopener">
+                                <span class="material-symbols-outlined">photo_camera</span>
+                                Instagram
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/Client.koi" target="_blank" rel="noopener">
+                                <span class="material-symbols-outlined">thumb_up</span>
+                                Facebook
                             </a>
                         </li>
                     </ul>
