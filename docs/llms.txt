@@ -1,0 +1,27 @@
+# Client Koi
+
+> Client Koi is a free, open-source Chrome extension that extracts B2B leads from Google Maps. It scrapes verified email addresses, phone numbers, websites, and social media profiles from local business listings — then exports everything to CSV or Excel for CRM import.
+
+## Features
+- Deep contact scraping: visits linked business websites to find hidden emails and social profiles
+- 2Captcha integration: automated CAPTCHA bypass for uninterrupted overnight scraping sessions
+- Anti-ban mechanics: humanized mouse movements, scrolling patterns, and randomized delays
+- One-click CRM export: download compiled lead lists as CSV or XLSX
+- Smart tag system: search by niche, location, and keyword combinations
+
+## Use Cases
+- Digital marketing agencies building outreach lists
+- Freelancers prospecting for new clients
+- Sales teams generating B2B lead databases
+- Real estate agents finding local business contacts
+- Startups validating market size in specific regions
+
+## Links
+- Homepage: https://clientkoi.online/
+- Guide: https://clientkoi.online/guide/
+- Features: https://clientkoi.online/features/
+- Tips: https://clientkoi.online/tips/
+- Comparison: https://clientkoi.online/compare/
+- Download: https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip
+- Source Code: https://github.com/Shihab-Miah/Client-Koi
+- Support (WhatsApp): https://wa.me/8801951838769

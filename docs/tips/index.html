@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Scraping Tips | Client Koi Best Practices</title>
+    <meta name="description" content="10 expert tips to get more leads with Client Koi. Learn smart delay settings, data cleaning, overnight scraping, cold email integration, and more.">
+    <meta name="keywords" content="google maps scraping tips, how to use google maps scraper, lead generation best practices, scraping tips, google maps data extraction tips, Client Koi tips">
+    <meta name="author" content="Client Koi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://clientkoi.online/tips/" />
+
+    <script type="application/ld+json">
+    { "@context":"https://schema.org", "@type":"Article", "headline":"10 Pro Tips for Google Maps Scraping with Client Koi", "description":"Expert techniques to maximize your lead extraction results from Google Maps.", "author":{"@type":"Organization","name":"Client Koi","url":"https://clientkoi.online/"}, "publisher":{"@type":"Organization","name":"Client Koi","logo":{"@type":"ImageObject","url":"https://clientkoi.online/logo.png"}}, "datePublished":"2026-07-20", "dateModified":"2026-07-20", "mainEntityOfPage":"https://clientkoi.online/tips/", "image":"https://clientkoi.online/logo.png" }
+    </script>
+    <script type="application/ld+json">
+    { "@context":"https://schema.org", "@type":"BreadcrumbList", "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://clientkoi.online/"},{"@type":"ListItem","position":2,"name":"Tips","item":"https://clientkoi.online/tips/"}] }
+    </script>
+    <!-- FAQ Schema for rich results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Client Koi safe for my Chrome account?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Client Koi operates locally in your browser and uses humanized delay intervals, randomized mouse movements, and session rotation to prevent your account from being flagged by Google's anti-bot systems." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Client Koi find hidden email addresses?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Google Maps rarely displays email addresses directly. Client Koi visits the business's linked website in the background to extract contact emails, phone numbers, and social media profiles that aren't visible on the Maps listing itself." }
+        },
+        {
+          "@type": "Question",
+          "name": "What if Google updates their Maps interface?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We actively monitor Google Maps DOM changes. When structural updates occur, we push new stable releases to the GitHub repository immediately. Simply re-download the latest version to stay compatible." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I handle the Manifest V3 warning in Chrome?",
+          "acceptedAnswer": { "@type": "Answer", "text": "When running an unpacked extension in Developer Mode, Chrome may display a harmless warning about Service Workers or Manifest V3. You can safely ignore this notification — it does not affect the extension's functionality." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I run Client Koi overnight?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes! Enable 2Captcha integration and set a conservative delay interval (5-8 seconds). Client Koi will automatically solve CAPTCHAs and continue scraping while you sleep, yielding thousands of leads by morning." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is scraping Google Maps legal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Scraping publicly available data from Google Maps is generally considered legal. The US court case hiQ Labs v. LinkedIn (2022) established that scraping publicly accessible data does not violate the Computer Fraud and Abuse Act. Always use reasonable rate limits and comply with GDPR/CCPA when reaching out to contacts." }
+        }
+      ]
+    }
+    </script>
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://clientkoi.online/tips/">
+    <meta property="og:title" content="Google Maps Scraping Tips | Client Koi Best Practices">
+    <meta property="og:description" content="10 expert tips to get more leads with Client Koi. Learn smart delay settings, data cleaning, overnight scraping, and more.">
+    <meta property="og:image" content="https://clientkoi.online/logo.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Google Maps Scraping Tips | Client Koi Best Practices">
+    <meta property="twitter:description" content="10 expert tips to get more leads with Client Koi.">
+    <meta property="twitter:image" content="https://clientkoi.online/logo.png">
+
+    <link rel="icon" type="image/png" sizes="1024x1024" href="https://clientkoi.online/logo.png">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="https://clientkoi.online/logo-red.png">
+    <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "xmqhfxyyz5");</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav>
+        <div class="container nav-inner">
+            <a href="/" class="logo"><img src="../logo.png" alt="Client Koi Logo" width="36" height="36"> Client Koi</a>
+            <div class="nav-links" id="navLinks">
+                <a href="/">Home</a>
+                <a href="/guide/">Guide</a>
+                <a href="/features/">Features</a>
+                <a href="/tips/" class="active">Tips</a>
+                <a href="/compare/">Compare</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary nav-download"><span class="material-symbols-outlined" style="font-size:18px">download</span> Download</a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu"><span class="material-symbols-outlined">menu</span></button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+    <header class="page-hero container">
+        <div class="breadcrumb gsap-reveal"><a href="/">Home</a> <span class="separator">/</span> <span>Tips</span></div>
+        <h1 class="gsap-reveal">Pro Tips: Get More Leads<br>with Client Koi</h1>
+        <p class="subtitle gsap-reveal">10 expert techniques to maximize your Google Maps lead extraction results — from smart delay settings to data cleaning best practices.</p>
+    </header>
+
+    <!-- Tips Grid -->
+    <section class="section container">
+        <div class="tips-grid" style="counter-reset:tip-counter;">
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">1</div>
+                <h3>Clean Your Data After Every Session</h3>
+                <p>After exporting your leads, remove duplicate entries and invalid email addresses before starting outreach. Use a free tool like <strong>Hunter.io Email Verifier</strong> or <strong>NeverBounce</strong> to validate emails — this keeps your bounce rate low and protects your sender reputation.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">2</div>
+                <h3>Use Specific, Long-Tail Search Tags</h3>
+                <p>Instead of broad searches like "restaurants", use highly specific tags: <strong>"Italian restaurants with delivery in Brooklyn NY"</strong>. Specific searches produce fewer but significantly higher-quality leads — businesses that exactly match your target customer profile.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">3</div>
+                <h3>Set Smart Delay Intervals</h3>
+                <p>Configure Client Koi's delay jitter to <strong>3-7 seconds</strong> between actions for regular use, or <strong>5-10 seconds</strong> for overnight sessions. Random delays mimic human browsing patterns and dramatically reduce the chance of triggering Google's bot detection systems.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">4</div>
+                <h3>Run Overnight Extraction Sessions</h3>
+                <p>Enable <strong>2Captcha integration</strong>, set conservative delay intervals, and start Client Koi before bed. By morning, you'll have thousands of verified leads — emails, phone numbers, websites, and social links — all ready for export without any manual work.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">5</div>
+                <h3>Target Unclaimed Business Listings</h3>
+                <p>Businesses listed on Google Maps <strong>without a website</strong> are often the highest-value prospects for digital marketing agencies. They need online presence services the most. Filter your exported data to find entries with phone numbers but no website URL.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">6</div>
+                <h3>Export and Segment Immediately</h3>
+                <p>Don't wait to organize your data. After each scraping session, export to CSV and immediately segment leads by <strong>city, niche, and quality signals</strong> (review count, rating, has website). Pre-segmented lists make personalized outreach dramatically easier.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">7</div>
+                <h3>Combine Scraping with Cold Email</h3>
+                <p>Import your Client Koi exports into cold email tools like <strong>Lemlist, Instantly, or Mailchimp</strong>. Use the business name and category data for personalization: <em>"Hi [Business Name], I noticed you're a [category] in [city]..."</em> — personalized emails get 3x higher response rates.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">8</div>
+                <h3>Use Multiple Chrome Profiles</h3>
+                <p>For large-scale scraping across many cities or niches, create <strong>separate Chrome profiles</strong> (each with its own Google account). Run Client Koi in one profile while you work in another. This distributes your scraping activity and reduces risk per account.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">9</div>
+                <h3>Keep Client Koi Updated</h3>
+                <p>Google occasionally updates the Maps interface (DOM structure), which can break scraping selectors. We push fixes to the <a href="https://github.com/Shihab-Miah/Client-Koi" target="_blank" rel="noopener noreferrer">GitHub repository</a> immediately when this happens. Re-download the latest version monthly to stay compatible.</p>
+            </div>
+
+            <div class="glass-panel glow-card tip-card gsap-reveal">
+                <div class="tip-number">10</div>
+                <h3>Verify Emails Before Sending</h3>
+                <p>Sending to invalid emails damages your domain reputation and can get you blacklisted. Use free verification services like <strong>Hunter.io, ZeroBounce, or Email Hippo</strong> to validate your extracted email list before launching any outreach campaign. Aim for a bounce rate under 3%.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ Section (moved from homepage, expanded) -->
+    <section id="faq" class="section container">
+        <div class="section-header gsap-reveal">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about B2B lead generation with Client Koi.</p>
+        </div>
+        <div class="features-grid">
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>Is Client Koi safe for my Chrome account?</h3>
+                <p class="text-muted">Yes. Client Koi operates locally in your browser and uses humanized delay intervals, randomized mouse movements, and session rotation to prevent your account from being flagged by Google's anti-bot systems.</p>
+            </div>
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>Does it find hidden email addresses?</h3>
+                <p class="text-muted">Yes. Google Maps rarely displays email addresses directly. Client Koi visits the business's linked website in the background to extract contact emails, phone numbers, and social media profiles that aren't visible on the Maps listing itself.</p>
+            </div>
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>What if Google updates their Maps code?</h3>
+                <p class="text-muted">We actively monitor Google Maps DOM changes. When structural updates occur, we push new stable releases to the GitHub repository immediately. Simply re-download the latest version to stay compatible.</p>
+            </div>
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>How do I handle the Manifest V3 warning?</h3>
+                <p class="text-muted">When running an unpacked extension in Developer Mode, Chrome may display a harmless warning about Service Workers or Manifest V3. You can safely ignore this notification — it does not affect the extension's functionality.</p>
+            </div>
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>Can I run Client Koi overnight?</h3>
+                <p class="text-muted">Absolutely! Enable 2Captcha integration and set a conservative delay interval (5-8 seconds between actions). Client Koi will automatically solve CAPTCHAs and continue scraping while you sleep, yielding thousands of leads by morning.</p>
+            </div>
+            <div class="glass-panel feature-card glow-card gsap-reveal">
+                <h3>Is scraping Google Maps legal?</h3>
+                <p class="text-muted">Scraping publicly available data from Google Maps is generally considered legal. The US court case <em>hiQ Labs v. LinkedIn (2022)</em> established that scraping publicly accessible data does not violate the Computer Fraud and Abuse Act. Always use reasonable rate limits and comply with GDPR/CCPA when reaching out to contacts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section container cta-section">
+        <div class="glass-panel gsap-reveal glow-card cta-panel">
+            <div class="cta-glow"></div>
+            <h2>Put These Tips Into Action</h2>
+            <p>Download Client Koi for free and start generating high-quality B2B leads from Google Maps today.</p>
+            <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary" style="position:relative;z-index:1;padding:18px 40px;font-size:1.2rem;">
+                <span class="material-symbols-outlined">download</span> Download Client Koi
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col footer-brand">
+                    <a href="/" class="footer-logo"><img src="../logo.png" alt="Client Koi Logo"> Client Koi</a>
+                    <p style="color:var(--text-muted);max-width:350px;font-size:0.95rem;margin-bottom:24px;">The ultimate B2B lead generation tool. Extract verified contacts from Google Maps and scale your business outreach.</p>
+                    <ul class="footer-links" style="display:flex;gap:24px;flex-wrap:wrap;"><li><a href="/">Home</a></li><li><a href="/guide/">Guide</a></li><li><a href="/features/">Features</a></li><li><a href="/tips/">Tips</a></li><li><a href="/compare/">Compare</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Connect With Us</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://wa.me/8801951838769" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">forum</span> WhatsApp</a></li>
+                        <li><a href="https://github.com/Shihab-Miah" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">code</span> GitHub</a></li>
+                        <li><a href="https://www.linkedin.com/in/shihab-miah-925781280/" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">work</span> LinkedIn</a></li>
+                        <li><a href="https://www.instagram.com/client.koi/" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">photo_camera</span> Instagram</a></li>
+                        <li><a href="https://www.facebook.com/Client.koi" target="_blank" rel="noopener noreferrer"><span class="material-symbols-outlined">thumb_up</span> Facebook</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <a href="https://wa.me/8801951838769" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block;">
+                        <div class="qr-card"><div class="qr-image-wrapper"><img src="https://quickchart.io/qr?text=https%3A%2F%2Fwa.me%2F8801951838769&size=300&margin=0" alt="WhatsApp QR Code" width="140" height="140"></div><div class="qr-text"><span class="material-symbols-outlined">forum</span> Chat on WhatsApp</div></div>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 Client Koi. All rights reserved.</p></div>
+        </div>
+    </footer>
+    </main>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', function() { document.getElementById('navLinks').classList.toggle('open'); const i=this.querySelector('.material-symbols-outlined'); i.textContent=i.textContent==='menu'?'close':'menu'; });
+        document.querySelectorAll('.glow-card').forEach(c => { c.addEventListener('mousemove', e => { const r=c.getBoundingClientRect(); c.style.setProperty('--mouse-x',`${e.clientX-r.left}px`); c.style.setProperty('--mouse-y',`${e.clientY-r.top}px`); }); });
+        window.onload = () => { if(typeof gsap!=='undefined'){const n=window.matchMedia('(prefers-reduced-motion:reduce)').matches;if(!n){gsap.registerPlugin(ScrollTrigger);document.querySelectorAll('.gsap-reveal').forEach(el=>{gsap.set(el,{autoAlpha:1});gsap.fromTo(el,{y:60,opacity:0},{y:0,opacity:1,duration:0.8,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 85%",toggleActions:"play none none none"}});});}else{document.querySelectorAll('.gsap-reveal').forEach(el=>{el.style.opacity='1';el.style.visibility='visible';});}} };
+    </script>
+</body>
+</html>

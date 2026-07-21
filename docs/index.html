@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Maps Scraper & Extractor | Client Koi B2B Lead Generation</title>
+    <title>Google Maps Scraper | Client Koi - Free B2B Leads</title>
     <meta name="description" content="Client Koi is the ultimate Google Maps scraper Chrome extension. Instantly extract verified emails, phone numbers, and websites for B2B lead generation.">
     <meta name="keywords" content="Google Maps Scraper, Google Maps Extractor, Google Maps Lead Extractor, B2B Lead Generation, local business scraper, extract emails from google maps, Client Koi">
     <meta name="author" content="Client Koi">
@@ -12,7 +12,7 @@
     <!-- canonical -->
     <link rel="canonical" href="https://clientkoi.online/" />
 
-    <!-- schema -->
+    <!-- SoftwareApplication schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -34,12 +34,57 @@
       }
     }
     </script>
+
+    <!-- WebSite schema with SearchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Client Koi",
-      "url": "https://clientkoi.online/"
+      "url": "https://clientkoi.online/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://clientkoi.online/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Organization schema (GEO audit fix: Identity Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Client Koi",
+      "url": "https://clientkoi.online/",
+      "logo": "https://clientkoi.online/logo.png",
+      "sameAs": [
+        "https://github.com/Shihab-Miah/Client-Koi",
+        "https://www.facebook.com/Client.koi",
+        "https://www.instagram.com/client.koi/",
+        "https://www.linkedin.com/in/shihab-miah-925781280/"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://wa.me/8801951838769"
+      }
+    }
+    </script>
+
+    <!-- SiteNavigationElement schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": ["Home", "Guide", "Features", "Tips", "Compare"],
+      "url": [
+        "https://clientkoi.online/",
+        "https://clientkoi.online/guide/",
+        "https://clientkoi.online/features/",
+        "https://clientkoi.online/tips/",
+        "https://clientkoi.online/compare/"
+      ]
     }
     </script>
 
@@ -47,14 +92,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://clientkoi.online/">
     <meta property="og:site_name" content="Client Koi">
-    <meta property="og:title" content="Google Maps Scraper & Extractor | Client Koi B2B Lead Generation">
+    <meta property="og:title" content="Google Maps Scraper | Client Koi - Free B2B Leads">
     <meta property="og:description" content="Client Koi is the ultimate Google Maps scraper Chrome extension. Instantly extract verified emails, phone numbers, and websites for B2B lead generation.">
     <meta property="og:image" content="https://clientkoi.online/logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://clientkoi.online/">
-    <meta property="twitter:title" content="Google Maps Scraper & Extractor | Client Koi B2B Lead Generation">
+    <meta property="twitter:title" content="Google Maps Scraper | Client Koi - Free B2B Leads">
     <meta property="twitter:description" content="Client Koi is the ultimate Google Maps scraper Chrome extension. Instantly extract verified emails, phone numbers, and websites for B2B lead generation.">
     <meta property="twitter:image" content="https://clientkoi.online/logo.png">
     
@@ -83,588 +128,18 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     </noscript>
 
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js" defer></script>
 
     <style>
-        :root {
-            --bg-color: #020617;
-            --surface-1: rgba(255, 255, 255, 0.03);
-            --surface-2: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #1DB954; /* Radar Green */
-            --accent-glow: rgba(29, 185, 84, 0.4);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            width: 100%;
-        }
-
-        /* background orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: -1;
-        }
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: var(--accent);
-            top: 10%;
-            left: 10%;
-            animation: float-1 20s ease-in-out infinite alternate;
-        }
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: #3b82f6;
-            bottom: 10%;
-            right: 10%;
-            animation: float-2 25s ease-in-out infinite alternate-reverse;
-        }
-        @keyframes float-1 {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(100px, 50px) scale(1.2); }
-        }
-        @keyframes float-2 {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-100px, -80px) scale(1.1); }
-        }
-
-        /* a11y hidden */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        /* glass panel */
-        .glass-panel {
-            background: var(--surface-1);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* card glow */
-        .glow-card {
-            transition: border-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .glow-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(29, 185, 84, 0.08), transparent 40%);
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .glow-card:hover::before {
-            opacity: 1;
-        }
-        .glow-card:hover {
-            border-color: rgba(29, 185, 84, 0.4);
-            transform: translateY(-8px);
-        }
-        .glow-card > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 16px 0;
-            background: rgba(2, 6, 23, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: -0.02em;
-        }
-
-        .logo img {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(29,185,84,0.3);
-            object-fit: cover;
-        }
-
-        /* Buttons */
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--accent);
-            color: #000;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(29, 185, 84, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
-            transform: rotate(45deg) translate(-100%, 0);
-            transition: transform 0.6s;
-        }
-
-        .btn-primary:hover::after {
-            transform: rotate(45deg) translate(100%, 0);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 10px 40px rgba(29, 185, 84, 0.6);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding-top: 180px;
-            padding-bottom: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .badge {
-            background: rgba(29, 185, 84, 0.1);
-            border: 1px solid rgba(29, 185, 84, 0.3);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 32px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 15px rgba(29,185,84,0.15);
-        }
-        
-        .badge .dot {
-            width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 5.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -0.04em;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            min-height: 2.2em;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-muted);
-            max-width: 650px;
-            margin: 0 auto 40px;
-        }
-
-        /* Sections */
-        .section {
-            padding: 80px 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .section-header h2 {
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        /* Setup Video Section */
-        .setup-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: center;
-        }
-
-        @media (max-width: 900px) {
-            .setup-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(29,185,84,0.15);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
-            z-index: 2;
-        }
-        
-        .video-wrapper:hover {
-            transform: scale(1.03) translateY(-10px);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(29,185,84,0.3);
-            border-color: rgba(29,185,84,0.5);
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-
-        .steps-list {
-            list-style: none;
-            counter-reset: setup-counter;
-        }
-
-        .step-item {
-            position: relative;
-            padding-left: 64px;
-            margin-bottom: 40px;
-        }
-
-        .step-item::before {
-            counter-increment: setup-counter;
-            content: counter(setup-counter);
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 44px;
-            height: 44px;
-            background: var(--surface-2);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 0 15px rgba(29,185,84,0.2);
-            transition: all 0.3s ease;
-        }
-
-        .step-item:hover::before {
-            background: var(--accent);
-            color: #000;
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .step-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 6px;
-        }
-
-        .step-desc {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        .bangla-text {
-            display: none;
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            margin-top: 10px;
-            padding-left: 16px;
-            border-left: 2px solid var(--accent);
-            font-weight: 500;
-        }
-
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            padding: 32px;
-            /* Animation handled by .glow-card */
-        }
-
-        .feature-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(29, 185, 84, 0.1);
-            border: 1px solid rgba(29, 185, 84, 0.2);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            margin-bottom: 24px;
-            box-shadow: inset 0 0 20px rgba(29,185,84,0.05);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(-5deg);
-            background: rgba(29, 185, 84, 0.2);
-        }
-
-        .feature-icon .material-symbols-outlined {
-            font-size: 28px;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 80px 0 40px;
-            margin-top: 80px;
-            background: rgba(255,255,255,0.01);
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 48px;
-            margin-bottom: 64px;
-        }
-
-        .footer-col h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-            transform: translateX(5px);
-        }
-        
-        .footer-links .material-symbols-outlined {
-            font-size: 18px;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 16px;
-        }
-
-        .footer-logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        /* qr code */
-        .qr-card {
-            background: rgba(255,255,255,0.03);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .qr-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, transparent 60%);
-            animation: rotate-glow 10s linear infinite;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        @keyframes rotate-glow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .qr-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: #25D366; /* WhatsApp Green */
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.2);
-            background: rgba(37, 211, 102, 0.05);
-        }
-        
-        .qr-image-wrapper {
-            background: #fff; /* QR needs contrast */
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .qr-card img {
-            width: 140px;
-            height: 140px;
-            display: block;
-        }
-        
-        .qr-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-            color: #f8fafc;
-            font-weight: 600;
-            z-index: 1;
-        }
-        
-        .qr-text .material-symbols-outlined {
-            color: #25D366; /* WhatsApp Green */
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 32px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Utility classes for GSAP */
-        .gsap-reveal { opacity: 0; visibility: hidden; }
-
-        .footer-brand {
-            grid-column: span 2;
-        }
-
+        .hero h1 { min-height: 2.2em; }
         @media (max-width: 768px) {
-            .hero {
-                padding-top: 120px;
-                padding-bottom: 60px;
-            }
-            .hero h1 {
-                font-size: clamp(2rem, 8vw, 2.5rem);
-                line-height: 1.2;
-                min-height: 3em;
-            }
-            .glass-panel {
-                padding: 30px 20px !important;
-            }
-            .footer-brand {
-                grid-column: span 1;
-            }
-            .nav-links {
-                display: none !important;
-            }
-            .nav-download {
-                padding: 8px 16px !important;
-                font-size: 0.85rem !important;
-            }
-            .nav-download .material-symbols-outlined {
-                display: none;
-            }
+            .hero h1 { min-height: 3em; }
         }
     </style>
 </head>
@@ -676,19 +151,26 @@
 
     <nav>
         <div class="container nav-inner">
-            <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="logo" style="text-decoration: none; color: inherit;">
+            <a href="/" class="logo">
                 <img src="logo.png" alt="Client Koi Logo" width="36" height="36">
                 Client Koi
             </a>
-            <div class="nav-links" style="display: flex; gap: 24px; font-weight: 500; font-size: 0.95rem;">
-                <a href="#setup-guide" style="text-decoration: none; color: #fff;">Setup Guide</a>
-                <a href="#features" style="text-decoration: none; color: #fff;">Features</a>
-                <a href="#faq" style="text-decoration: none; color: #fff;">FAQ</a>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="active">Home</a>
+                <a href="/guide/">Guide</a>
+                <a href="/features/">Features</a>
+                <a href="/tips/">Tips</a>
+                <a href="/compare/">Compare</a>
             </div>
-            <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary nav-download" style="padding: 10px 20px; font-size: 0.9rem;">
-                <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
-                Download
-            </a>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary nav-download">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+                    Download
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -716,17 +198,19 @@
         <div class="glass-panel" style="padding: 60px 40px; border-radius: 40px;">
             <div class="section-header gsap-reveal" style="margin-bottom: 40px;">
                 <h2>Quick Setup Guide</h2>
-                <p style="color: var(--text-muted); margin-top: 8px; font-size: 1.1rem; margin-bottom: 24px;">Install in under 2 minutes. Start extracting clients immediately.</p>
-                <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary" style="padding: 12px 28px; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 8px;">
+                <p>Install in under 2 minutes. Start extracting clients immediately.</p>
+                <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary" style="padding: 12px 28px; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;">
                     <span class="material-symbols-outlined" style="font-size: 20px;">download</span>
                     Download Client Koi Now
                 </a>
             </div>
             
             <div class="setup-container">
-                <div class="video-wrapper gsap-reveal">
-                    <!-- Embedded YouTube Video -->
-                    <iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/poFPbXIHhzo?autoplay=0&rel=0&modestbranding=1" title="Client Koi Setup Guide & Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <div class="video-wrapper gsap-reveal" id="ytPlayer">
+                    <!-- YouTube Facade for performance (replaces iframe on click) -->
+                    <div class="yt-facade" id="ytFacade" style="background-image: url('https://i.ytimg.com/vi/poFPbXIHhzo/hqdefault.jpg');" role="button" aria-label="Play Client Koi setup tutorial video" tabindex="0">
+                        <div class="play-btn"></div>
+                    </div>
                 </div>
                 
                 <div class="gsap-reveal">
@@ -738,7 +222,7 @@
                         </li>
                         <li class="step-item">
                             <div class="step-title">Open Chrome Extensions</div>
-                            <div class="step-desc">Navigate to <code style="background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">chrome://extensions</code> in your browser URL bar.</div>
+                            <div class="step-desc">Navigate to <code>chrome://extensions</code> in your browser URL bar.</div>
                             <div class="bangla-text" lang="bn">এবার ক্রোম ব্রাউজারের মেনু থেকে Manage Extensions পেজটি ওপেন করুন।</div>
                         </li>
                         <li class="step-item">
@@ -761,7 +245,7 @@
     <section id="interface-preview" class="section container">
         <div class="section-header gsap-reveal">
             <h2>Inside Client Koi</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 8px;">Take a look at the simple, lightweight interface designed for high-performance scraping and CRM exports.</p>
+            <p>Take a look at the simple, lightweight interface designed for high-performance scraping and CRM exports.</p>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 40px;">
             <div class="glass-panel glow-card gsap-reveal" style="padding: 24px; border-radius: 28px; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
@@ -769,8 +253,8 @@
                     <img src="assets/extension-home.png" width="800" height="500" alt="Client Koi Google Maps Scraper Extension Interface showing automated lead generation setup" style="width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover; margin-bottom: 20px;" loading="lazy">
                 </div>
                 <div>
-                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Scraper Sidepanel Interface</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Start extracting clients directly within Google Maps. Simple configurations for search tags, delay jitter, and automatic captcha solvers.</p>
+                    <h3>Scraper Sidepanel Interface</h3>
+                    <p class="text-muted" style="font-size: 0.95rem;">Start extracting clients directly within Google Maps. Simple configurations for search tags, delay jitter, and automatic captcha solvers.</p>
                 </div>
             </div>
             <div class="glass-panel glow-card gsap-reveal" style="padding: 24px; border-radius: 28px; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
@@ -778,115 +262,53 @@
                     <img src="assets/extension-dashboard.png" width="800" height="500" alt="Client Koi B2B Leads Dashboard displaying extracted local business emails, phone numbers, and websites" style="width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover; margin-bottom: 20px;" loading="lazy">
                 </div>
                 <div>
-                    <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Extracted Leads Dashboard</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Monitor extracted local business data in real time. Quickly preview emails, phone numbers, and social media handles before exporting to Excel or CSV.</p>
+                    <h3>Extracted Leads Dashboard</h3>
+                    <p class="text-muted" style="font-size: 0.95rem;">Monitor extracted local business data in real time. Quickly preview emails, phone numbers, and social media handles before exporting to Excel or CSV.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- features -->
-    <section id="features" class="section container">
-        <div class="section-header gsap-reveal">
-            <h2>The Ultimate Google Maps Scraper</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 8px;">Everything you need to bypass blocks and build your outreach pipeline.</p>
-        </div>
-        <div class="features-grid">
-            <div class="glass-panel feature-card glow-card gsap-reveal">
-                <div class="feature-icon"><span class="material-symbols-outlined">contact_mail</span></div>
-                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Deep Contact Scraping</h3>
-                <p class="text-muted">Automatically visits Google Maps websites to find hidden email addresses, phone numbers, and social media profiles for your outreach.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal">
-                <div class="feature-icon"><span class="material-symbols-outlined">smart_toy</span></div>
-                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">2Captcha Bypass</h3>
-                <p class="text-muted">Automated CAPTCHA solving keeps your lead generation sessions running overnight without manual intervention.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal">
-                <div class="feature-icon"><span class="material-symbols-outlined">shield</span></div>
-                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">Anti-Ban Mechanics</h3>
-                <p class="text-muted">Simulates human mouse movements, scrolling patterns, and randomized delays to protect your accounts from being flagged.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal">
-                <div class="feature-icon"><span class="material-symbols-outlined">dataset</span></div>
-                <h3 style="margin-bottom: 8px; font-size: 1.25rem;">One-Click CRM Export</h3>
-                <p class="text-muted">Download your entire compiled lead list as CSV or XLSX immediately ready for import into your favorite CRM or email sender.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Comparison Section -->
+    <!-- Explore Client Koi — Internal Link Hub for SEO -->
     <section class="section container">
         <div class="section-header gsap-reveal">
-            <h2>Client Koi vs. Alternatives</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 8px;">Why agencies are switching to Client Koi for Google Maps scraping.</p>
+            <h2>Explore Client Koi</h2>
+            <p>Everything you need to master Google Maps lead generation — from step-by-step tutorials to pro scraping tips.</p>
         </div>
-        <div class="glass-panel gsap-reveal" style="padding: 40px; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 600px;">
-                <thead>
-                    <tr style="border-bottom: 2px solid var(--border);">
-                        <th style="padding: 16px; color: var(--text-muted); font-weight: 600; width: 40%;">Feature</th>
-                        <th style="padding: 16px; color: var(--accent); font-weight: 700; width: 30%;">Client Koi</th>
-                        <th style="padding: 16px; color: var(--text-muted); font-weight: 600; width: 30%;">Instant Data Scraper</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 16px; color: #fff;">Deep Email Extraction</td>
-                        <td style="padding: 16px; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span> Yes</td>
-                        <td style="padding: 16px; color: var(--text-muted);"><span class="material-symbols-outlined" style="vertical-align: middle;">cancel</span> No</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 16px; color: #fff;">Automated Captcha Bypass</td>
-                        <td style="padding: 16px; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span> Yes (2Captcha)</td>
-                        <td style="padding: 16px; color: var(--text-muted);"><span class="material-symbols-outlined" style="vertical-align: middle;">cancel</span> Manual Only</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 16px; color: #fff;">Social Media Link Scraping</td>
-                        <td style="padding: 16px; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span> Yes</td>
-                        <td style="padding: 16px; color: var(--text-muted);"><span class="material-symbols-outlined" style="vertical-align: middle;">cancel</span> No</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 16px; color: #fff;">Formatted CRM Export</td>
-                        <td style="padding: 16px; color: var(--accent);"><span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span> 1-Click CSV/XLSX</td>
-                        <td style="padding: 16px; color: var(--text-muted);"><span class="material-symbols-outlined" style="vertical-align: middle;">warning</span> Requires Cleaning</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="explore-grid">
+            <a href="/guide/" class="glass-panel glow-card explore-card gsap-reveal">
+                <div class="card-icon"><span class="material-symbols-outlined">menu_book</span></div>
+                <h3>How to Scrape Google Maps</h3>
+                <p>Complete 2026 guide with step-by-step instructions for extracting B2B leads from Google Maps using Client Koi.</p>
+                <span class="card-link">Read the guide <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>
+            </a>
+            <a href="/features/" class="glass-panel glow-card explore-card gsap-reveal">
+                <div class="card-icon"><span class="material-symbols-outlined">hub</span></div>
+                <h3>All Features</h3>
+                <p>Deep email extraction, CAPTCHA bypass, anti-ban mechanics, CRM export, and social media scraping — explore every capability.</p>
+                <span class="card-link">See features <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>
+            </a>
+            <a href="/tips/" class="glass-panel glow-card explore-card gsap-reveal">
+                <div class="card-icon"><span class="material-symbols-outlined">lightbulb</span></div>
+                <h3>Pro Tips & Best Practices</h3>
+                <p>10 expert tips to maximize your lead extraction results — from smart delay settings to data cleaning techniques.</p>
+                <span class="card-link">Get tips <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>
+            </a>
+            <a href="/compare/" class="glass-panel glow-card explore-card gsap-reveal">
+                <div class="card-icon"><span class="material-symbols-outlined">balance</span></div>
+                <h3>Client Koi vs Alternatives</h3>
+                <p>See how Client Koi compares against Instant Data Scraper, Outscraper, and other popular Google Maps scrapers.</p>
+                <span class="card-link">Compare tools <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>
+            </a>
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="section container">
-        <div class="section-header gsap-reveal">
-            <h2>Frequently Asked Questions</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 8px;">Everything you need to know about B2B lead generation with Client Koi.</p>
-        </div>
-        <div class="features-grid">
-            <div class="glass-panel feature-card glow-card gsap-reveal" style="padding: 32px;">
-                <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Is this safe for my Chrome account?</h3>
-                <p class="text-muted">Yes. Client Koi operates locally in your browser environment and uses humanized delay intervals to prevent your session from being flagged by Google's anti-bot systems.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal" style="padding: 32px;">
-                <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Does it find hidden emails?</h3>
-                <p class="text-muted">Google Maps rarely displays email addresses directly. Our engine visits the business's linked website in the background to extract contact emails and social media profiles.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal" style="padding: 32px;">
-                <h3 style="margin-bottom: 12px; font-size: 1.25rem;">What if Google updates their Maps code?</h3>
-                <p class="text-muted">We actively monitor Google Maps DOM changes. When structural updates occur, we push new stable releases to this repository immediately.</p>
-            </div>
-            <div class="glass-panel feature-card glow-card gsap-reveal" style="padding: 32px;">
-                <h3 style="margin-bottom: 12px; font-size: 1.25rem;">How do I handle the Manifest V3 warning?</h3>
-                <p class="text-muted">When running an unpacked extension in Developer Mode, Chrome may display a harmless warning about Service Workers or Manifest V3. You can safely ignore this.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section container" style="text-align: center; padding-bottom: 60px;">
-        <div class="glass-panel gsap-reveal glow-card" style="padding: 80px 40px; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: var(--accent); filter: blur(150px); opacity: 0.2; z-index: 0;"></div>
-            <h2 style="font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 24px; position: relative; z-index: 1;">Ready to try the #1 B2B Lead Extractor?</h2>
-            <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 32px; position: relative; z-index: 1;">Start building your B2B lead database today.</p>
+    <!-- Final CTA -->
+    <section class="section container cta-section">
+        <div class="glass-panel gsap-reveal glow-card cta-panel">
+            <div class="cta-glow"></div>
+            <h2>Ready to Build Your B2B Lead Database?</h2>
+            <p>Join thousands of agencies using Client Koi to extract verified contacts from Google Maps — completely free.</p>
             <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary" style="position: relative; z-index: 1; padding: 18px 40px; font-size: 1.2rem;">
                 <span class="material-symbols-outlined">download</span>
                 Download Client Koi
@@ -899,62 +321,67 @@
             <div class="footer-grid">
                 
                 <div class="footer-col footer-brand">
-                    <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="footer-logo" style="text-decoration: none; color: inherit;">
+                    <a href="/" class="footer-logo">
                         <img src="logo.png" alt="Client Koi Logo">
-                Client Koi
+                        Client Koi
                     </a>
                     <p style="color: var(--text-muted); max-width: 350px; font-size: 0.95rem; margin-bottom: 24px;">
                         The ultimate B2B lead generation tool. Extract verified contacts from Google Maps and scale your business outreach.
                     </p>
+                    <!-- Pages -->
+                    <ul class="footer-links" style="display:flex;gap:24px;flex-wrap:wrap;">
+                        <li><a href="/guide/">Guide</a></li>
+                        <li><a href="/features/">Features</a></li>
+                        <li><a href="/tips/">Tips</a></li>
+                        <li><a href="/compare/">Compare</a></li>
+                    </ul>
                 </div>
 
                 <div class="footer-col">
                     <h3>Connect With Us</h3>
                     <ul class="footer-links">
                         <li>
-                            <!-- Direct link to Gmail web compose -->
-                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shihabmiah.work@gmail.com" target="_blank" rel="noopener">
-                                <span class="material-symbols-outlined">mail</span>
-                                shihabmiah.work@gmail.com
+                            <a href="https://wa.me/8801951838769" target="_blank" rel="noopener noreferrer">
+                                <span class="material-symbols-outlined">forum</span>
+                                WhatsApp Support
                             </a>
                         </li>
                         <li>
-                            <a href="https://github.com/Shihab-Miah" target="_blank" rel="noopener">
+                            <a href="https://github.com/Shihab-Miah" target="_blank" rel="noopener noreferrer">
                                 <span class="material-symbols-outlined">code</span>
                                 GitHub Profile
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.linkedin.com/in/shihab-miah-925781280/" target="_blank" rel="noopener">
+                            <a href="https://www.linkedin.com/in/shihab-miah-925781280/" target="_blank" rel="noopener noreferrer">
                                 <span class="material-symbols-outlined">work</span>
                                 LinkedIn Profile
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/client.koi/" target="_blank" rel="noopener">
+                            <a href="https://www.instagram.com/client.koi/" target="_blank" rel="noopener noreferrer">
                                 <span class="material-symbols-outlined">photo_camera</span>
                                 Instagram
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.facebook.com/Client.koi" target="_blank" rel="noopener">
+                            <a href="https://www.facebook.com/Client.koi" target="_blank" rel="noopener noreferrer">
                                 <span class="material-symbols-outlined">thumb_up</span>
                                 Facebook
                             </a>
                         </li>
                     </ul>
                     <div style="margin-top: 24px;">
-                        <a href="https://www.producthunt.com/products/client-koi?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-client-koi" target="_blank" rel="noopener noreferrer"><img alt="Client Koi - Extract B2B leads from Google Maps for free | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1200344&amp;theme=dark&amp;t=1784444870008"></a>
+                        <a href="https://www.producthunt.com/products/client-koi?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-client-koi" target="_blank" rel="noopener noreferrer"><img alt="Client Koi on Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1200344&amp;theme=dark&amp;t=1784444870008" loading="lazy"></a>
                     </div>
                 </div>
 
                 <div class="footer-col">
                     <h3>Support / Contact</h3>
-                    <a href="https://wa.me/8801951838769" target="_blank" rel="noopener" style="text-decoration: none; display: inline-block;">
+                    <a href="https://wa.me/8801951838769" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;">
                         <div class="qr-card">
                             <div class="qr-image-wrapper">
-                                <!-- Sharp QR Code pointing to WhatsApp -->
-                                <img src="https://quickchart.io/qr?text=https%3A%2F%2Fwa.me%2F8801951838769&size=300&margin=0" alt="WhatsApp QR Code">
+                                <img src="https://quickchart.io/qr?text=https%3A%2F%2Fwa.me%2F8801951838769&size=300&margin=0" alt="WhatsApp QR Code — Scan to chat with Client Koi support" width="140" height="140">
                             </div>
                             <div class="qr-text">
                                 <span class="material-symbols-outlined">forum</span>
@@ -974,29 +401,52 @@
     </main>
 
     <script>
-        // card glow fx
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('open');
+            const icon = this.querySelector('.material-symbols-outlined');
+            icon.textContent = icon.textContent === 'menu' ? 'close' : 'menu';
+        });
+
+        // Card glow fx
         document.querySelectorAll('.glow-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
         });
 
-        // show bangla text if browser lang is bn
+        // Show Bangla text if browser lang is bn
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.toLowerCase().startsWith('bn')) {
-                const banglaTexts = document.querySelectorAll('.bangla-text');
-                banglaTexts.forEach(el => {
-                    el.style.display = 'block';
-                });
+                document.querySelectorAll('.bangla-text').forEach(el => el.style.display = 'block');
             }
         });
 
-        // auto scroll logic
+        // YouTube Facade — loads iframe only on click (massive mobile perf boost)
+        document.getElementById('ytFacade').addEventListener('click', function() {
+            const wrapper = document.getElementById('ytPlayer');
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://www.youtube-nocookie.com/embed/poFPbXIHhzo?autoplay=1&rel=0&modestbranding=1';
+            iframe.title = 'Client Koi Setup Guide & Tutorial';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.allowFullscreen = true;
+            iframe.loading = 'lazy';
+            wrapper.innerHTML = '';
+            wrapper.appendChild(iframe);
+        });
+
+        // Also handle keyboard activation for the facade
+        document.getElementById('ytFacade')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+
+        // Auto scroll logic
         let hasUserScrolled = false;
         window.addEventListener('scroll', () => {
             if (window.scrollY > 100) hasUserScrolled = true;
@@ -1005,13 +455,11 @@
         setTimeout(() => {
             if (!hasUserScrolled) {
                 const guideSection = document.getElementById('setup-guide');
-                if (guideSection) {
-                    guideSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                if (guideSection) guideSection.scrollIntoView({ behavior: 'smooth' });
             }
         }, 5500);
 
-        // init gsap
+        // Init GSAP
         window.onload = () => {
             if (typeof gsap !== 'undefined') {
                 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1019,7 +467,6 @@
                 if (!prefersReducedMotion) {
                     gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                    // hero typing
                     gsap.to("#typewriter", {
                         duration: 2.5,
                         text: "Find your next B2B clients.<br>Extract leads from Maps.",
@@ -1028,29 +475,18 @@
                     });
                     gsap.to(".cursor", { opacity: 0, ease: "power2.inOut", repeat: -1, yoyo: true, duration: 0.6 });
 
-                    // fade in
                     gsap.fromTo('.gsap-hero:not(h1)', 
                         { y: 30, opacity: 0 },
                         { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.5 }
                     );
                     
-                    // scroll reveal
-                    const revealElements = document.querySelectorAll('.gsap-reveal');
-                    revealElements.forEach((el) => {
+                    document.querySelectorAll('.gsap-reveal').forEach(el => {
                         gsap.set(el, { autoAlpha: 1 });
-                        
                         gsap.fromTo(el, 
                             { y: 60, opacity: 0 },
                             {
-                                y: 0, 
-                                opacity: 1, 
-                                duration: 0.8, 
-                                ease: "power2.out",
-                                scrollTrigger: {
-                                    trigger: el,
-                                    start: "top 85%", 
-                                    toggleActions: "play none none none"
-                                }
+                                y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+                                scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" }
                             }
                         );
                     });
