@@ -129,7 +129,11 @@
     </noscript>
 
     <!-- Shared Styles -->
+    <link rel="preload" as="style" href="styles.css">
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Preconnect for GA -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
 
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -259,7 +263,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 40px;">
             <div class="glass-panel glow-card gsap-reveal" style="padding: 24px; border-radius: 28px; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
-                    <img src="assets/extension-home.png" width="800" height="500" alt="Client Koi Google Maps Scraper Extension Interface showing automated lead generation setup" style="width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover; margin-bottom: 20px;" loading="lazy">
+                    <img src="assets/extension-home.png" width="800" height="500" alt="Client Koi Google Maps Data Extractor Extension Interface showing automated lead generation setup" style="width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover; margin-bottom: 20px;" fetchpriority="high">
                 </div>
                 <div>
                     <h3>Scraper Sidepanel Interface</h3>

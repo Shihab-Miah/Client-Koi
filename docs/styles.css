@@ -6,9 +6,9 @@
 /* --- Design Tokens --- */
 :root {
     --bg-color: #020617;
-    --surface-1: rgba(255, 255, 255, 0.03);
-    --surface-2: rgba(255, 255, 255, 0.05);
-    --surface-3: rgba(255, 255, 255, 0.08);
+    --surface-1: rgba(255, 255, 255, 0.02);
+    --surface-2: rgba(255, 255, 255, 0.04);
+    --surface-3: rgba(255, 255, 255, 0.06);
     --border: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(29, 185, 84, 0.4);
     --accent: #1DB954;
@@ -89,6 +89,7 @@ img {
     opacity: 0.15;
     pointer-events: none;
     z-index: -1;
+    will-change: transform;
 }
 
 .orb-1 {
@@ -110,13 +111,13 @@ img {
 }
 
 @keyframes float-1 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(100px, 50px) scale(1.2); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(100px, 50px, 0) scale(1.2); }
 }
 
 @keyframes float-2 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-100px, -80px) scale(1.1); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(-100px, -80px, 0) scale(1.1); }
 }
 
 /* --- Container --- */
@@ -332,6 +333,8 @@ nav {
     border-radius: 100px;
     font-size: 0.875rem;
     font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: var(--accent);
     margin-bottom: 32px;
     display: inline-flex;
