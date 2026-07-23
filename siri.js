@@ -1576,7 +1576,6 @@ function applyAllUIUpgrades() {
          font-weight: 800;
          padding: 2px 6px;
          border-radius: 6px;
-         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
          font-family: var(--lm-font-body);
          pointer-events: none;
        `;
@@ -1586,32 +1585,29 @@ function applyAllUIUpgrades() {
 
      // GMB Visit Button injection
      const applyYellowStyle = (el) => {
-         el.classList.remove('lm-green-blink');
          el.style.cssText = `
              background: rgba(251, 191, 36, 0.15) !important;
              border: 1px solid var(--lm-primary) !important;
              color: var(--lm-primary) !important;
-             box-shadow: 0 0 10px rgba(251, 191, 36, 0.3) !important;
              text-decoration: none !important;
              display: inline-flex !important;
              text-transform: uppercase !important;
              letter-spacing: 0.5px !important;
              transition: all 0.2s ease !important;
+             text-shadow: none !important;
          `;
      };
      const applyGreenStyle = (el) => {
-         el.classList.add('lm-green-blink');
          el.style.cssText = `
              background: rgba(var(--lm-primary-rgb), 0.15) !important;
              border: 1px solid var(--lm-primary) !important;
              color: var(--lm-primary) !important;
-             text-shadow: 0 0 8px var(--lm-primary) !important;
-             box-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.2) !important;
              text-decoration: none !important;
              display: inline-flex !important;
              text-transform: uppercase !important;
              letter-spacing: 0.5px !important;
              transition: all 0.2s ease !important;
+             text-shadow: none !important;
          `;
      };
 
@@ -1624,7 +1620,7 @@ function applyAllUIUpgrades() {
           btn.textContent = 'GMB Visit';
           btn.target = '_blank';
           btn.href = gmbUrl;
-          btn.style.cssText = 'margin-top: 8px; width: fit-content;';
+          btn.style.cssText = 'margin-top: 8px; width: fit-content; text-shadow: none;';
           card.appendChild(btn);
 
           btn.onclick = (e) => {
@@ -1659,7 +1655,7 @@ function applyAllUIUpgrades() {
        }
      };
 
-     // Try to get GMB URL from native elements first (synchronous extraction)
+     // Try to get GMB URL from native elements first
      const nativeLink = card.querySelector('a[href*="google.com/maps"]') || 
                         card.querySelector('a[href*="maps.google.com"]') || 
                         card.querySelector('a[href*="maps.app.goo.gl"]');
@@ -1670,18 +1666,18 @@ function applyAllUIUpgrades() {
      if (!card.classList.contains('lm-card-upgraded')) {
        card.classList.add('lm-card-upgraded');
        
-       card.style.background = 'linear-gradient(135deg, rgba(20, 26, 35, 0.7) 0%, rgba(13, 17, 23, 0.9) 100%)';
-       card.style.border = '1px solid rgba(255, 255, 255, 0.05)';
-       card.style.borderTop = '1px solid rgba(255, 255, 255, 0.08)';
+       card.style.background = 'linear-gradient(135deg, rgba(20, 26, 35, 0.85) 0%, rgba(13, 17, 23, 0.95) 100%)';
+       card.style.border = '1px solid rgba(255, 255, 255, 0.08)';
        card.style.borderRadius = '16px';
-       card.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)';
+       card.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.35)';
        card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-       
+       card.style.textShadow = 'none';
+
        if (h3) {
          h3.style.color = '#ffffff';
-         h3.style.fontSize = '14px';
+         h3.style.fontSize = '15px';
          h3.style.fontWeight = '800';
-         h3.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.5)';
+         h3.style.textShadow = 'none';
          h3.style.letterSpacing = '0.3px';
          h3.style.transition = 'color 0.2s ease';
          
@@ -1700,6 +1696,7 @@ function applyAllUIUpgrades() {
            if (!avatar) {
              avatar = document.createElement('div');
              avatar.className = 'lm-card-avatar';
+             avatar.style.textShadow = 'none';
              avatar.textContent = firstChar;
              titleContainer.insertBefore(avatar, h3);
            }
@@ -1709,6 +1706,43 @@ function applyAllUIUpgrades() {
 
          if (name) {
            getCachedLeadByName(name).then(record => {
+             const website = record ? (record["Website"] || record["website"] || record["Website URL"] || record["website_url"] || record["Website link"] || record["website link"]) : null;
+             const isNoWebsite = !website || website.trim() === '' || website.trim().toLowerCase() === 'not available' || website.trim().toLowerCase() === 'n/a';
+             
+             // If NO WEBSITE: Highlight row/card in gold/amber color scheme!
+             if (isNoWebsite) {
+               card.classList.add('lm-no-website-card');
+               card.style.border = '1px solid rgba(251, 191, 36, 0.5)';
+               card.style.background = 'linear-gradient(135deg, rgba(35, 26, 12, 0.9) 0%, rgba(251, 191, 36, 0.08) 100%)';
+               card.style.boxShadow = '0 8px 32px rgba(251, 191, 36, 0.15)';
+               
+               let pitchBadge = card.querySelector('.lm-pitch-badge');
+               if (!pitchBadge) {
+                 pitchBadge = document.createElement('div');
+                 pitchBadge.className = 'lm-pitch-badge';
+                 pitchBadge.style.cssText = `
+                   display: inline-flex;
+                   align-items: center;
+                   gap: 6px;
+                   background: rgba(251, 191, 36, 0.18);
+                   border: 1px solid rgba(251, 191, 36, 0.4);
+                   color: #fbbf24;
+                   font-size: 10px;
+                   font-weight: 800;
+                   padding: 4px 10px;
+                   border-radius: 20px;
+                   margin-bottom: 10px;
+                   text-transform: uppercase;
+                   letter-spacing: 0.5px;
+                   text-shadow: none;
+                 `;
+                 pitchBadge.innerHTML = `🎯 NO WEBSITE (PRIME PITCH LEAD)`;
+                 if (titleContainer) {
+                   titleContainer.after(pitchBadge);
+                 }
+               }
+             }
+
              let webRow = card.querySelector('.lm-card-website');
              if (!webRow) {
                webRow = document.createElement('div');
@@ -1723,19 +1757,18 @@ function applyAllUIUpgrades() {
                 border: 1px solid rgba(255, 255, 255, 0.04);
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 margin-bottom: 6px;
+                text-shadow: none;
               `;
                if (infoContainer) {
                  infoContainer.appendChild(webRow);
                }
              }
 
-             const website = record ? (record["Website"] || record["website"] || record["Website URL"] || record["website_url"] || record["Website link"] || record["website link"]) : null;
-             
-             if (website && website.trim() !== '' && website.trim().toLowerCase() !== 'not available' && website.trim().toLowerCase() !== 'n/a') {
+             if (!isNoWebsite) {
                let cleanWeb = website.trim();
                webRow.innerHTML = `
                  <span style="font-size: 16px; line-height: 1; opacity: 0.9;">🌐</span>
-                 <span class="lm-web-link" style="color: #e2e8f0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;">${cleanWeb}</span>
+                 <span class="lm-web-link" style="color: #e2e8f0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; text-shadow: none;">${cleanWeb}</span>
                `;
                webRow.style.cursor = 'pointer';
                
@@ -1753,7 +1786,7 @@ function applyAllUIUpgrades() {
              } else {
                webRow.innerHTML = `
                  <span style="font-size: 16px; line-height: 1; opacity: 0.9;">🚫</span>
-                 <span class="lm-glow-red" style="font-size: 12px;">No Website Found</span>
+                 <span style="font-size: 12px; font-weight: 700; color: #fbbf24; text-shadow: none;">No Website Found (Pitch AI Site)</span>
                `;
                webRow.style.cursor = 'not-allowed';
              }
@@ -1792,11 +1825,13 @@ function applyAllUIUpgrades() {
              border: 1px solid rgba(255, 255, 255, 0.04);
              margin-bottom: 6px;
              cursor: pointer;
+             text-shadow: none;
            `;
            
            const textSpan = row.querySelector('span');
            if (textSpan) {
              textSpan.style.color = '#e2e8f0';
+             textSpan.style.textShadow = 'none';
            }
            
            row.addEventListener('click', (e) => {
@@ -1809,13 +1844,13 @@ function applyAllUIUpgrades() {
        }
        
        card.addEventListener('mouseenter', () => {
-         card.style.borderColor = 'rgba(var(--lm-primary-rgb), 0.3)';
-         card.style.background = 'linear-gradient(135deg, rgba(20, 26, 35, 0.8) 0%, rgba(var(--lm-primary-rgb), 0.04) 100%)';
+         const isNoWeb = card.classList.contains('lm-no-website-card');
+         card.style.borderColor = isNoWeb ? 'rgba(251, 191, 36, 0.8)' : 'rgba(var(--lm-primary-rgb), 0.4)';
          card.style.transform = 'translateY(-3px)';
        });
        card.addEventListener('mouseleave', () => {
-         card.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-         card.style.background = 'linear-gradient(135deg, rgba(20, 26, 35, 0.7) 0%, rgba(13, 17, 23, 0.9) 100%)';
+         const isNoWeb = card.classList.contains('lm-no-website-card');
+         card.style.borderColor = isNoWeb ? 'rgba(251, 191, 36, 0.5)' : 'rgba(255, 255, 255, 0.08)';
          card.style.transform = 'translateY(0)';
        });
      }
