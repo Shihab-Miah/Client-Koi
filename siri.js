@@ -242,14 +242,6 @@ function applyAllUIUpgrades() {
      });
   }
 
-  // 0. Programmatically hide/strip the old React Free Trial and Upgrade UI
-  const divs = document.querySelectorAll('div');
-  divs.forEach(div => {
-     if (div.className && typeof div.className === 'string' && div.className.includes('bg-[#0f172a]') && div.className.includes('px-5') && div.className.includes('py-3') && div.className.includes('z-20')) {
-        div.style.setProperty('display', 'none', 'important');
-     }
-  });
-
   // 1. Hide Deep Web Scan Card & Force ON
   const titleNodes = document.querySelectorAll('div.text-sm.font-bold');
   titleNodes.forEach(node => {
@@ -2488,7 +2480,7 @@ setInterval(() => {
       upgradeTimeout = setTimeout(() => {
         upgradeTimeout = null;
         applyAllUIUpgrades();
-      }, 100);
+      }, 1000); // Throttled to 1s
     }
   });
   uiObserver.observe(document.body, { childList: true, subtree: true });
@@ -2514,7 +2506,7 @@ setInterval(() => {
         if (typeof upgradeAllCards === 'function') {
           upgradeAllCards();
         }
-      }, 20);
+      }, 500); // Throttled to 500ms
     }
   });
   cardObserver.observe(document.body, { childList: true, subtree: true });
@@ -2790,400 +2782,192 @@ function fallbackCopyToClipboard(text, callback) {
 }
 
 function formatTableCells(table, ths) {
-    // Ensure styles are injected
     if (!document.getElementById('lm-glow-styles')) {
         const style = document.createElement('style');
         style.id = 'lm-glow-styles';
         style.textContent = `
-            @keyframes lm-white-glow {
-               0% { text-shadow: 0 0 4px rgba(255, 255, 255, 0.4), 0 0 8px rgba(255, 255, 255, 0.2); }
-               50% { text-shadow: 0 0 16px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8), 0 0 35px rgba(255, 255, 255, 0.6); }
-               100% { text-shadow: 0 0 4px rgba(255, 255, 255, 0.4), 0 0 8px rgba(255, 255, 255, 0.2); }
+            body.lm-clean-table-active table {
+               display: grid !important;
+               /* Excel sheet lines on the table borders */
+               border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+               border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+               border-collapse: collapse;
+               justify-content: start !important; 
+               /* Use max-content so columns don't stretch to infinity on wide screens */
+               width: max-content !important;
+               max-width: 100% !important;
+               margin: 0 auto;
+               background: rgba(15, 23, 42, 0.8) !important;
             }
-            @keyframes lm-white-blink {
-               0% { opacity: 0.4; }
-               50% { opacity: 1; }
-               100% { opacity: 0.4; }
+            body.lm-clean-table-active thead, body.lm-clean-table-active tbody {
+               display: contents !important;
             }
-            @keyframes lm-green-blink {
-               0% { opacity: 0.6; box-shadow: 0 0 5px rgba(var(--lm-primary-rgb), 0.2); }
-               50% { opacity: 1; box-shadow: 0 0 15px rgba(var(--lm-primary-rgb), 0.7); }
-               100% { opacity: 0.6; box-shadow: 0 0 5px rgba(var(--lm-primary-rgb), 0.2); }
+            body.lm-clean-table-active tr {
+               display: grid !important;
+               grid-template-columns: var(--lm-grid-cols, 1fr) !important;
+               width: 100% !important;
+               /* Remove bottom border from row, let cells handle it */
+               border-bottom: none !important;
+               grid-column-gap: 0px !important; 
+            }
+            body.lm-clean-table-active th, body.lm-clean-table-active td {
+               display: flex;
+               align-items: center;
+               padding: 8px 6px !important; 
+               overflow: hidden;
+               word-break: break-word; 
+               overflow-wrap: anywhere;
+               white-space: normal !important; 
+               text-shadow: none !important;
+               /* Excel sheet lines separating every cell! */
+               border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+               border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+               box-sizing: border-box;
+            }
+            body.lm-clean-table-active th {
+               background: rgba(30, 41, 59, 0.95) !important;
+               font-weight: 700;
+               text-transform: uppercase;
+               letter-spacing: 0.5px;
+               font-size: 11px;
+               color: #cbd5e1;
             }
             .lm-glow-white {
                color: #ffffff !important;
-               font-weight: 900 !important;
-               animation: lm-white-glow 2s infinite alternate !important;
-               text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
-            }
-            .lm-white-blink {
-               animation: lm-white-blink 1.5s infinite ease-in-out !important;
-            }
-            .lm-glow-white.lm-white-blink {
-               color: #ffffff !important;
-               font-weight: 900 !important;
-               animation: lm-white-glow 2s infinite alternate, lm-white-blink 1.5s infinite ease-in-out !important;
-               text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
-            }
-            .lm-glow-white.lm-white-blink *, .lm-glow-white.lm-white-blink a {
-               color: #ffffff !important;
-               font-weight: 900 !important;
-               animation: lm-white-glow 2s infinite alternate, lm-white-blink 1.5s infinite ease-in-out !important;
-               text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
-            }
-            .lm-green-blink {
-               animation: lm-green-blink 1.5s infinite ease-in-out !important;
-            }
-            .lm-glow-white, .lm-white-blink {
+               font-weight: 800 !important;
+               text-shadow: none !important;
                cursor: copy !important;
             }
-            
-            /* Table structure controls */
-            body.lm-clean-table-active table, table.lm-clean-table-active {
-               table-layout: fixed !important;
-               width: 1750px !important;
-               min-width: 1750px !important;
+            .lm-hidden-col {
+               display: none !important;
             }
-            body.lm-clean-table-active table,
-            body.lm-clean-table-active thead,
-            body.lm-clean-table-active tbody,
-            body.lm-clean-table-active tr,
-            body.lm-clean-table-active th,
-            body.lm-clean-table-active td,
-            body.lm-clean-table-active .border,
-            body.lm-clean-table-active [class*="border"] {
-               border: none !important;
-               border-color: transparent !important;
-               box-shadow: none !important;
-               outline: none !important;
+            .lm-amber-highlight {
+               background: linear-gradient(90deg, rgba(35, 26, 12, 0.8) 0%, rgba(251, 191, 36, 0.05) 100%) !important;
             }
-            body.lm-clean-table-active div:has(table), 
-            body.lm-clean-table-active div:has(> table) {
-               overflow-x: auto !important;
-               max-width: 100% !important;
-            }
-            body.lm-clean-table-active th,
-            body.lm-clean-table-active th * {
-               overflow: hidden !important;
-               text-overflow: ellipsis !important;
-               white-space: nowrap !important;
-            }
-            body.lm-clean-table-active td,
-            body.lm-clean-table-active td * {
-               overflow: hidden !important;
-               text-overflow: ellipsis !important;
-               white-space: nowrap !important;
-            }
-            
-            /* Column width and spacing constraints to prevent huge gaps */
-            .lm-th-checkbox, .lm-checkbox-col {
-               width: 45px !important;
-               max-width: 45px !important;
-               text-align: center !important;
-            }
-            .lm-th-image, .lm-image-col {
-               width: 70px !important;
-               max-width: 70px !important;
-               text-align: center !important;
-            }
-            .lm-th-name, .lm-name-col {
-               width: 220px !important;
-               max-width: 220px !important;
-            }
-            .lm-th-address, .lm-address-col {
-               width: 250px !important;
-               max-width: 250px !important;
-            }
-            .lm-th-phone, .lm-phone-glowed {
-               width: 140px !important;
-               max-width: 140px !important;
-            }
-            .lm-th-email, .lm-email-glowed {
-               width: 180px !important;
-               max-width: 180px !important;
-            }
-            .lm-th-web, .lm-web-glowed {
-               width: 140px !important;
-               max-width: 140px !important;
-            }
-            .lm-th-gmb, .lm-gmb-formatted {
-               width: 90px !important;
-               max-width: 90px !important;
-            }
-            .lm-th-status, .lm-status-formatted {
-               width: 110px !important;
-               max-width: 110px !important;
-            }
-            .lm-th-rating, .lm-rating-col {
-               width: 90px !important;
-               max-width: 90px !important;
-            }
-            .lm-th-reviews, .lm-reviews-col {
-               width: 95px !important;
-               max-width: 95px !important;
+            body.lm-clean-table-active .lm-th-image img {
+               border-radius: 6px;
+               width: 32px;
+               height: 32px;
+               object-fit: cover;
+               flex-shrink: 0;
             }
         `;
         document.head.appendChild(style);
     }
 
-    const rows = Array.from(table.querySelectorAll('tr')).slice(1);
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
     rows.forEach(row => {
         const tds = Array.from(row.querySelectorAll('td'));
         tds.forEach((td, index) => {
             const th = ths[index];
             if (!th) return;
             
-            // Safe helpers to support both real DOM elements (with classList) and plain object mocks
             const hasClass = (cls) => th.classList && th.classList.contains && th.classList.contains(cls);
-            const matchesText = (keywords) => {
-                const text = (th.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
-                return keywords.some(kw => text.includes(kw));
-            };
 
-            // Format checkbox
-            if (hasClass('lm-th-checkbox') || (th.querySelector && th.querySelector('input[type="checkbox"]'))) {
-                td.classList.add('lm-checkbox-col');
-            }
-            
-            // Format Name
-            if (hasClass('lm-th-name') || matchesText(['name'])) {
-                td.classList.add('lm-name-col');
-            }
-            
-            // Format Image
-            if (hasClass('lm-th-image') || matchesText(['image', 'logo'])) {
-                td.classList.add('lm-image-col');
-            }
-            
-            // Format Rating
-            if (hasClass('lm-th-rating') || matchesText(['rating', 'stars'])) {
-                td.classList.add('lm-rating-col');
-            }
-            
-            // Format Reviews
-            if (hasClass('lm-th-reviews') || matchesText(['review'])) {
-                td.classList.add('lm-reviews-col');
-            }
-            
-            // Format Address (glowing & blinking white, copy on click)
-            if (hasClass('lm-th-address') || matchesText(['address'])) {
-                td.classList.add('lm-address-col');
+            if (hasClass('lm-th-address')) {
                 if (!td.classList.contains('lm-address-glowed')) {
                     td.classList.add('lm-address-glowed');
                     const text = td.textContent.trim();
                     if (text) {
-                        td.innerHTML = `<span class="lm-glow-white lm-white-blink" style="display:inline-block; cursor:copy;">${text}</span>`;
+                        td.innerHTML = `<span class="lm-glow-white" style="display:inline-block; cursor:copy; font-size:12px; color:#fff !important; font-weight:700; text-shadow:none !important;">${text}</span>`;
                         td.style.cursor = 'copy';
-                        td.title = 'Click to copy address';
-                        td.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            copyToClipboard(text, td);
-                        });
+                        td.addEventListener('click', (e) => { e.stopPropagation(); if(typeof copyToClipboard === 'function') copyToClipboard(text, td); });
                     }
                 }
             }
             
-            // Format GMB URL / Google Maps URL
-            if (hasClass('lm-th-gmb') || matchesText(['gmb', 'google maps'])) {
+            if (hasClass('lm-th-image')) {
+                td.classList.add('lm-th-image');
+            }
+            
+            if (hasClass('lm-th-gmb')) {
                 if (!td.classList.contains('lm-gmb-formatted')) {
                     td.classList.add('lm-gmb-formatted');
                     const urlText = td.textContent.trim();
                     if (urlText && (urlText.startsWith('http://') || urlText.startsWith('https://'))) {
-                        td.innerHTML = ''; // clear original text
-                        
+                        td.innerHTML = ''; 
                         const btn = document.createElement('a');
-                        btn.href = urlText;
-                        btn.target = '_blank';
-                        btn.textContent = 'Visit';
-                        btn.className = 'px-3 py-1 rounded-md text-xs font-bold transition-all inline-flex items-center justify-center cursor-pointer';
-                        
-                        const applyYellowStyle = (el) => {
-                            el.classList.remove('lm-green-blink');
-                            el.style.cssText = `
-                                background: rgba(251, 191, 36, 0.15) !important;
-                                border: 1px solid var(--lm-primary) !important;
-                                color: var(--lm-primary) !important;
-                                box-shadow: 0 0 10px rgba(251, 191, 36, 0.3) !important;
-                                text-decoration: none !important;
-                                display: inline-flex !important;
-                                text-transform: uppercase !important;
-                                letter-spacing: 0.5px !important;
-                            `;
-                        };
-
-                        const applyGreenStyle = (el) => {
-                            el.classList.add('lm-green-blink');
-                            el.style.cssText = `
-                                background: rgba(var(--lm-primary-rgb), 0.15) !important;
-                                border: 1px solid var(--lm-primary) !important;
-                                color: var(--lm-primary) !important;
-                                text-shadow: 0 0 8px var(--lm-primary) !important;
-                                box-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.2) !important;
-                                text-decoration: none !important;
-                                display: inline-flex !important;
-                                text-transform: uppercase !important;
-                                letter-spacing: 0.5px !important;
-                            `;
-                        };
-                        
-                        // Check if it's already visited in session storage
-                        let visitedUrls = [];
-                        try {
-                            visitedUrls = JSON.parse(sessionStorage.getItem('lmVisitedUrls') || '[]');
-                        } catch (_) {}
-                        
-                        const isVisited = visitedUrls.includes(urlText);
-                        if (isVisited) {
-                            applyYellowStyle(btn);
-                        } else {
-                            applyGreenStyle(btn);
-                        }
-                        
-                        btn.onmouseenter = (e) => {
-                            let currentVisited = [];
-                            try {
-                                currentVisited = JSON.parse(sessionStorage.getItem('lmVisitedUrls') || '[]');
-                            } catch (_) {}
-                            if (currentVisited.includes(urlText)) {
-                                btn.style.background = 'var(--lm-primary)';
-                                btn.style.color = '#000';
-                                btn.style.boxShadow = '0 0 15px rgba(251, 191, 36, 0.6)';
-                            } else {
-                                btn.style.background = 'var(--lm-primary)';
-                                btn.style.color = '#000';
-                                btn.style.boxShadow = '0 0 15px rgba(var(--lm-primary-rgb), 0.5)';
-                            }
-                            btn.style.transform = 'translateY(-1px)';
-                        };
-                        btn.onmouseleave = (e) => {
-                            let currentVisited = [];
-                            try {
-                                currentVisited = JSON.parse(sessionStorage.getItem('lmVisitedUrls') || '[]');
-                            } catch (_) {}
-                            if (currentVisited.includes(urlText)) {
-                                applyYellowStyle(btn);
-                            } else {
-                                applyGreenStyle(btn);
-                            }
-                            btn.style.transform = 'translateY(0)';
-                        };
-
+                        btn.href = '#';
                         btn.onclick = (e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            let currentVisited = [];
-                            try {
-                                currentVisited = JSON.parse(sessionStorage.getItem('lmVisitedUrls') || '[]');
-                            } catch (_) {}
-                            if (!currentVisited.includes(urlText)) {
-                                currentVisited.push(urlText);
-                                if (currentVisited.length > 200) currentVisited.shift();
-                                try {
-                                    sessionStorage.setItem('lmVisitedUrls', JSON.stringify(currentVisited));
-                                } catch (_) {}
-                            }
-                            applyYellowStyle(btn);
-                            
-                            // Copy to clipboard
-                            copyToClipboard(urlText, btn);
-                            
-                            // Open in new tab
-                            window.open(urlText, '_blank');
+                            window.open(urlText, 'lm_gmb_popup', 'width=1200,height=800,left=100,top=100,popup=1');
                         };
-                        
+                        btn.textContent = 'Visit';
+                        btn.style.cssText = `
+                            background: rgba(var(--lm-primary-rgb), 0.15) !important;
+                            border: 1px solid var(--lm-primary) !important;
+                            color: var(--lm-primary) !important;
+                            box-shadow: none !important;
+                            text-shadow: none !important;
+                            text-decoration: none !important;
+                            display: inline-flex !important;
+                            text-transform: uppercase !important;
+                            letter-spacing: 0.5px !important;
+                            padding: 4px 12px !important;
+                            border-radius: 6px !important;
+                            font-size: 11px !important;
+                            font-weight: 800 !important;
+                            white-space: nowrap !important;
+                        `;
                         td.appendChild(btn);
                     }
                 }
             }
             
-            // Format Business Status (glowing & blinking white, copy on click)
-            if (hasClass('lm-th-status') || matchesText(['status'])) {
+            if (hasClass('lm-th-status')) {
                 if (!td.classList.contains('lm-status-formatted')) {
                     td.classList.add('lm-status-formatted');
-                    const statusText = td.textContent.trim();
-                    if (statusText) {
-                        const bg = 'rgba(255, 255, 255, 0.05)';
-                        const border = 'rgba(255, 255, 255, 0.2)';
-                        td.innerHTML = `<span class="lm-glow-white lm-white-blink px-2.5 py-1 rounded-md text-[11px] font-bold" style="background:${bg}; border:1px solid ${border}; display:inline-block; text-transform:uppercase; letter-spacing:0.5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${statusText}</span>`;
-                        
-                        const span = td.querySelector('span');
-                        if (span) {
-                            span.style.cursor = 'copy';
-                            span.title = 'Click to copy status';
-                        }
-                        td.style.cursor = 'copy';
-                        td.title = 'Click to copy status';
-                        td.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            copyToClipboard(statusText, td);
-                        });
+                    const text = td.textContent.trim().toLowerCase();
+                    if (text.includes('open')) {
+                        td.innerHTML = `<span style="color:#10b981; font-weight:800; font-size:12px; text-shadow:none !important;">🟢 OPEN</span>`;
+                    } else if (text.includes('close')) {
+                        td.innerHTML = `<span style="color:#ef4444; font-weight:800; font-size:12px; text-shadow:none !important;">🔴 CLOSED</span>`;
                     }
                 }
             }
             
-            // Format Phone (glowing & blinking white, copy on click)
-            if (hasClass('lm-th-phone') || matchesText(['phone'])) {
+            if (hasClass('lm-th-phone')) {
                 if (!td.classList.contains('lm-phone-glowed')) {
                     td.classList.add('lm-phone-glowed');
                     const text = td.textContent.trim();
-                    if (text) {
-                        td.innerHTML = `<span class="lm-glow-white lm-white-blink" style="display:inline-block; cursor:copy;">${text}</span>`;
-                        td.style.cursor = 'copy';
-                        td.title = 'Click to copy phone number';
-                        td.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            copyToClipboard(text, td);
-                        });
+                    if (text && text !== 'N/A' && text !== 'null') {
+                        td.innerHTML = `<span style="color:#fff; font-weight:800; font-size:13px; cursor:copy; text-shadow:none !important;">${text}</span>`;
+                        td.addEventListener('click', (e) => { e.stopPropagation(); if(typeof copyToClipboard === 'function') copyToClipboard(text, td); });
                     }
                 }
             }
             
-            // Format Email (glowing & blinking white, copy on click)
-            if (hasClass('lm-th-email') || matchesText(['email'])) {
+            if (hasClass('lm-th-email')) {
                 if (!td.classList.contains('lm-email-glowed')) {
                     td.classList.add('lm-email-glowed');
                     const text = td.textContent.trim();
-                    if (text) {
-                        td.innerHTML = `<span class="lm-glow-white lm-white-blink" style="display:inline-block; cursor:copy;">${text}</span>`;
-                        td.style.cursor = 'copy';
-                        td.title = 'Click to copy email address';
-                        td.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            copyToClipboard(text, td);
-                        });
+                    if (text && text.includes('@')) {
+                        td.innerHTML = `<span style="color:var(--lm-primary); font-weight:800; font-size:12px; text-shadow:none !important; word-break: break-all;">${text}</span>`;
                     }
                 }
             }
             
-            // Format Website (glowing & blinking white, copy on click)
-            if (hasClass('lm-th-web') || matchesText(['website'])) {
+            if (hasClass('lm-th-web')) {
                 if (!td.classList.contains('lm-web-glowed')) {
                     td.classList.add('lm-web-glowed');
-                    td.style.cursor = 'copy';
-                    td.title = 'Click to copy website URL';
-                    
-                    const link = td.querySelector('a');
-                    if (link) {
-                        link.classList.add('lm-glow-white', 'lm-white-blink');
-                        link.style.textDecoration = 'none';
-                        link.addEventListener('click', (e) => {
+                    const text = td.textContent.trim().toLowerCase();
+                    if (!text || text === 'n/a' || text === 'not available' || text === 'null' || text === '-') {
+                        td.innerHTML = `<span style="font-weight:900; font-size:11px; text-shadow:none !important; color:#fbbf24 !important;">🎯 NO WEBSITE</span>`;
+                        td.style.color = '#fbbf24';
+                    } else {
+                        const finalUrl = td.textContent.trim().startsWith('http') ? td.textContent.trim() : 'http://' + td.textContent.trim();
+                        td.innerHTML = '';
+                        const webBtn = document.createElement('a');
+                        webBtn.href = '#';
+                        webBtn.onclick = (e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            const url = link.href || link.textContent.trim();
-                            copyToClipboard(url, link);
-                            if (url && (url.startsWith('http') || url.startsWith('www.'))) {
-                                window.open(url.startsWith('http') ? url : 'http://' + url, '_blank');
-                            }
-                        });
-                    } else {
-                        const text = td.textContent.trim();
-                        if (text) {
-                            td.innerHTML = `<span class="lm-glow-white lm-white-blink" style="display:inline-block; cursor:copy;">${text}</span>`;
-                            td.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                copyToClipboard(text, td);
-                            });
-                        }
+                            window.open(finalUrl, 'lm_web_popup', 'width=1200,height=800,left=100,top=100,popup=1');
+                        };
+                        webBtn.style.cssText = 'color:#60a5fa; font-weight:700; font-size:12px; text-decoration:none; text-shadow:none !important; word-break: break-all;';
+                        webBtn.textContent = td.textContent.trim();
+                        td.appendChild(webBtn);
                     }
                 }
             }
@@ -4476,99 +4260,169 @@ function applyCleanDataView(isClean) {
         document.body.classList.remove('lm-clean-table-active');
     }
     
+    // 1. Inject Number Column Header
+    const theadTr = table.querySelector('thead tr');
+    if (theadTr && !theadTr.querySelector('.lm-injected-num-th')) {
+        const numTh = document.createElement('th');
+        numTh.textContent = '#';
+        numTh.classList.add('lm-injected-num-th');
+        if (theadTr.children.length > 1) {
+            theadTr.insertBefore(numTh, theadTr.children[1]);
+        } else {
+            theadTr.appendChild(numTh);
+        }
+    }
+    
+    // 2. Fix Scraper Bug: Rename broken columns
     const ths = Array.from(table.querySelectorAll('th'));
     if (ths.length === 0) return;
     
-    const allowedCols = [
-      // Raw names
-      'name', 
-      'full address', 
-      'phone 1', 
-      'phone standard format', 
-      'email from website', 
-      'website', 
-      'reviews count', 
-      'average rating', 
-      'business status',
-      'google maps url',
-      'gmb url',
-      'image/logo url',
-      'image url',
-      'image',
-      
-      // Formatted names
-      'company/business name',
-      'phone number (1 & 2)',
-      'email address',
-      'website url',
-      'rating (stars)',
-      'review count'
-    ];
-    
-    const hiddenIndices = [];
-    ths.forEach((th, index) => {
-        if (th.querySelector('input[type="checkbox"]')) {
-            th.classList.add('lm-th-checkbox');
-            th.style.display = ''; // always show selection checkbox
-            return;
+    ths.forEach(th => {
+        const text = (th.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        if (text === 'phone from website') {
+            th.textContent = 'WEBSITE'; 
         }
-        
-        const text = th.textContent.trim().toLowerCase().replace(/\s+/g, ' ');
-        
-        // Clear classes so they don't accumulate incorrectly
-        th.classList.remove(
-            'lm-th-gmb', 'lm-th-status', 'lm-th-phone', 'lm-th-email', 'lm-th-web',
-            'lm-th-rating', 'lm-th-reviews', 'lm-th-name', 'lm-th-address', 'lm-th-image'
-        );
-        
-        // Add header width constraint classes for Clean Data view
-        if (text.includes('gmb') || text.includes('google maps') || text === 'gmb url') {
-            th.classList.add('lm-th-gmb');
-        } else if (text.includes('status')) {
-            th.classList.add('lm-th-status');
-        } else if (text.includes('phone')) {
-            th.classList.add('lm-th-phone');
-        } else if (text.includes('email')) {
-            th.classList.add('lm-th-email');
-        } else if (text.includes('website')) {
-            th.classList.add('lm-th-web');
-        } else if (text.includes('rating') || text.includes('stars')) {
-            th.classList.add('lm-th-rating');
-        } else if (text.includes('review')) {
-            th.classList.add('lm-th-reviews');
-        } else if (text.includes('name')) {
-            th.classList.add('lm-th-name');
-        } else if (text.includes('address')) {
-            th.classList.add('lm-th-address');
-        } else if (text.includes('image') || text.includes('logo')) {
-            th.classList.add('lm-th-image');
+    });
+
+    // 3. Inject Number Data Cells & Pad missing data cells
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    rows.forEach((row, rowIndex) => {
+        if (!row.querySelector('.lm-injected-num-td')) {
+            const numTd = document.createElement('td');
+            numTd.textContent = (rowIndex + 1).toString();
+            numTd.classList.add('lm-injected-num-td');
+            numTd.style.fontWeight = '900';
+            numTd.style.color = '#64748b';
+            numTd.style.textAlign = 'center';
+            numTd.style.fontSize = '12px';
+            if (row.children.length > 1) {
+                row.insertBefore(numTd, row.children[1]);
+            } else {
+                row.appendChild(numTd);
+            }
         }
 
-        const isCheckboxCol = index === 0 && (text === '' || /^\d+$/.test(text) || text.includes('image'));
-        const isAllowed = allowedCols.some(col => text.includes(col)) || isCheckboxCol;
+        let tds = Array.from(row.querySelectorAll('td'));
+        if (tds.length < ths.length) {
+            const diff = ths.length - tds.length;
+            const gmbIndex = Math.max(0, tds.length - 3); 
+            for(let i = 0; i < diff; i++) {
+                const pad = document.createElement('td');
+                pad.textContent = ''; 
+                row.insertBefore(pad, tds[gmbIndex]);
+            }
+        }
+    });
+    
+    const hiddenIndices = [];
+    let webColIndex = -1;
+    
+    let orderMap = {
+        checkbox: { order: 1, width: '40px', found: false },
+        number: { order: 2, width: '40px', found: false },
+        image: { order: 3, width: '50px', found: false },
+        name: { order: 4, width: '180px', found: false },
+        address: { order: 5, width: '220px', found: false },
+        phone: { order: 6, width: '130px', found: false },
+        web: { order: 7, width: '140px', found: false },
+        email: { order: 8, width: '160px', found: false },
+        gmb: { order: 9, width: '90px', found: false },
+        reviews: { order: 10, width: '80px', found: false },
+        status: { order: 11, width: '110px', found: false }
+    };
+    
+    ths.forEach((th, index) => {
+        const hasCheckbox = th.querySelector('input[type="checkbox"]');
+        const text = (th.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        const hasImage = th.querySelector('img, svg, i, .avatar') || (text === '' && index === 2);
         
-        if (isClean && !isAllowed) {
-            th.style.display = 'none';
-            hiddenIndices.push(index);
+        let order = -1;
+
+        if (hasCheckbox && !orderMap.checkbox.found) {
+            order = orderMap.checkbox.order; orderMap.checkbox.found = true; th.classList.add('lm-th-checkbox');
+        } else if (th.classList.contains('lm-injected-num-th') && !orderMap.number.found) {
+            order = orderMap.number.order; orderMap.number.found = true; th.classList.add('lm-th-number');
+        } else if ((hasImage || text === 'image' || text === 'photo' || text === 'logo' || text === 'pic') && !orderMap.image.found) {
+            order = orderMap.image.order; orderMap.image.found = true; th.classList.add('lm-th-image');
+        } else if (text.includes('name') && !text.includes('file') && !orderMap.name.found) {
+            order = orderMap.name.order; orderMap.name.found = true; th.classList.add('lm-th-name');
+        } else if (text.includes('address') && !orderMap.address.found) {
+            order = orderMap.address.order; orderMap.address.found = true; th.classList.add('lm-th-address');
+        } else if ((text.includes('phone 1') || text.includes('phone standard') || text.includes('phone number') || text === 'phone') && !orderMap.phone.found) {
+            order = orderMap.phone.order; orderMap.phone.found = true; th.classList.add('lm-th-phone');
+        } else if (text === 'website' && !orderMap.web.found) {
+            order = orderMap.web.order; orderMap.web.found = true; th.classList.add('lm-th-web');
+            webColIndex = index;
+        } else if ((text.includes('email') || text.includes('e-mail')) && !orderMap.email.found) {
+            order = orderMap.email.order; orderMap.email.found = true; th.classList.add('lm-th-email');
+        } else if ((text.includes('gmb') || text.includes('google maps') || text === 'url') && !orderMap.gmb.found) {
+            order = orderMap.gmb.order; orderMap.gmb.found = true; th.classList.add('lm-th-gmb');
+        } else if (text.includes('review') && !orderMap.reviews.found) {
+            order = orderMap.reviews.order; orderMap.reviews.found = true; th.classList.add('lm-th-reviews');
+        } else if (text.includes('status') && !orderMap.status.found) {
+            order = orderMap.status.order; orderMap.status.found = true; th.classList.add('lm-th-status');
+        } else if (index === 0 && !orderMap.checkbox.found) {
+            order = orderMap.checkbox.order; orderMap.checkbox.found = true; th.classList.add('lm-th-checkbox');
+        }
+        
+        if (isClean) {
+            if (order !== -1) {
+                th.style.order = order.toString();
+                th.classList.remove('lm-hidden-col');
+                th.style.display = ''; 
+            } else {
+                th.classList.add('lm-hidden-col');
+                hiddenIndices.push(index);
+            }
         } else {
+            th.classList.remove('lm-hidden-col');
+            th.style.order = '';
             th.style.display = '';
         }
     });
     
-    const rows = Array.from(table.querySelectorAll('tr')).slice(1);
-    rows.forEach(row => {
-        const tds = row.querySelectorAll('td');
-        tds.forEach((td, index) => {
-            if (isClean && hiddenIndices.includes(index)) {
-                td.style.display = 'none';
+    if (isClean) {
+        const foundCols = Object.values(orderMap).filter(c => c.found).sort((a, b) => a.order - b.order);
+        const gridTemplate = foundCols.map(c => c.width).join(' ');
+        table.style.setProperty('--lm-grid-cols', gridTemplate);
+    } else {
+        table.style.removeProperty('--lm-grid-cols');
+    }
+    
+    Array.from(table.querySelectorAll('tbody tr')).forEach(row => {
+        const tds = Array.from(row.querySelectorAll('td'));
+        
+        if (isClean && webColIndex !== -1 && tds[webColIndex]) {
+            const webText = tds[webColIndex].textContent.trim().toLowerCase();
+            if (!webText || webText === 'n/a' || webText === 'not available' || webText === 'null' || webText === '-') {
+                row.classList.add('lm-amber-highlight');
             } else {
-                td.style.display = '';
+                row.classList.remove('lm-amber-highlight');
+            }
+        } else {
+            row.classList.remove('lm-amber-highlight');
+        }
+
+        tds.forEach((td, index) => {
+            if (isClean) {
+                if (hiddenIndices.includes(index)) {
+                    td.classList.add('lm-hidden-col');
+                } else {
+                    td.classList.remove('lm-hidden-col');
+                    if (ths[index] && ths[index].style.order) {
+                        td.style.order = ths[index].style.order;
+                    }
+                }
+            } else {
+                td.classList.remove('lm-hidden-col');
+                td.style.order = '';
             }
         });
     });
 
-    // Format special columns
-    formatTableCells(table, ths);
+    if (typeof formatTableCells === 'function') {
+        formatTableCells(table, ths);
+    }
 }
 
 // --- Database Purging Implementation ---

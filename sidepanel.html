@@ -676,7 +676,7 @@
       font-size: 32px !important;
       font-weight: 700 !important;
       color: #ffffff !important;
-      text-shadow: 0 0 10px var(--lm-primary), 0 0 20px rgba(var(--lm-primary-rgb), 0.5) !important;
+      text-shadow: none !important;
       letter-spacing: -0.5px !important;
       animation: lm-counter-pulse 1.5s ease-in-out infinite alternate !important;
       margin-top: 10px !important;
@@ -689,12 +689,17 @@
       text-transform: uppercase !important;
       color: rgba(var(--lm-primary-rgb), 0.8) !important;
       margin-top: 2px !important;
-      text-shadow: 0 0 5px rgba(var(--lm-primary-rgb), 0.3) !important;
+      text-shadow: none !important;
     }
 
     @keyframes lm-counter-pulse {
       0% { transform: scale(0.98); }
       100% { transform: scale(1.03); }
+    }
+
+    /* Global override: Discard all text glow & blur effects */
+    *, *::before, *::after {
+      text-shadow: none !important;
     }
     </style>
 </head>
